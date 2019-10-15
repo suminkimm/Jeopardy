@@ -127,6 +127,8 @@ if (isset($_POST['submitLogIn'])) {
 
     // check if user exists
     $check_sql = pg_query($conn, "SELECT * FROM public.users WHERE username = '$username'");
+    echo "error:" .pg_last_error($check_sql);
+
     if (pg_num_rows($check_sql) != 0) { // existing
         while($row = $check_sql->fetch_assoc()) {
             $hashed_pwd = $row['password'];
@@ -143,6 +145,7 @@ if (isset($_POST['submitLogIn'])) {
             $_SESSION['first_name'] = $first_name;
             $_SESSION['last_name'] = $last_name;
             $_SESSION['valid'] = 1;
+            echo "<script>alert(\"p verify.\")</script>";
 
             echo "<script>window.location='main.php'</script>";
 
@@ -157,8 +160,6 @@ if (isset($_POST['submitLogIn'])) {
 }
 
 elseif (isset($_POST['submitSignUp'])) {
-
-    echo "submitsignup";
 
     $username = $_POST['username'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
