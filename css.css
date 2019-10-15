@@ -1,0 +1,131 @@
+
+body {
+    font-family: source-sans-pro, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+
+    background-image: url("jeopardy.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+h1 {
+    text-align: center;
+    font-family: source-sans-pro, sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+h5 {
+    text-align: center;
+}
+
+td {
+    padding: 12px;
+    background:white;
+    text-align: center;
+}
+
+button {
+    border: none;
+    background: none;
+}
+
+input[type=text] {
+    width: 300px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+input:focus {
+    border-color: pink;
+    box-shadow: 0 1px 1px pink inset, 0 0 3px lightpink;
+    outline: 0 none;
+}
+
+select {
+    background: white;
+}
+
+a {
+    color:#ff8fa5;
+}
+
+a:hover {
+    color:pink;
+}
+
+.navbar {
+    background:white;
+}
+
+.bg-img {
+
+}
+
+.container {
+    padding: 10px;
+}
+
+.row {
+    padding-top: 20px;
+}
+
+.center {
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.questions-table {
+    margin-bottom: 50px;
+}
+
+.add-to-fav:hover {
+    color:gold;
+}
+
+#start-over {
+    background: lightgoldenrodyellow;
+    padding: 10px;
+}
+
+#start-over:hover {
+    background: palegoldenrod;
+}
+
+#countdown {
+    padding: 20px;
+    text-align: center;
+}
+
+#user-answer {
+    width: 100%;
+}
+
+#correct-button {
+    background: aquamarine;
+    padding: 10px;
+    margin-bottom:20px;
+    float:right;
+}
+
+#wrong-button {
+    background: pink;
+    padding: 10px;
+    margin-bottom: 20px;
+    float:left;
+}
+
+#submit-answer, #add-to-fav {
+    border:none;
+    background: skyblue;
+}
+
+#submit-answer:hover {
+    background: lightskyblue;
+}
+
+#add-to-fav:hover {
+    background: lightskyblue;
+}
