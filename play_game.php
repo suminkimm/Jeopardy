@@ -21,11 +21,11 @@
         <nav class="navbar sticky-top navbar-expand-lg">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="index.php" style="font-size: 30px;">Jeopardy!</a>
+                    <a class="navbar-brand" href="main.php" style="font-size: 30px;">Jeopardy!</a>
                 </div>
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item"><button class="PlayGame" onclick="window.location= 'play_game.php'"> Play Game</button></li>
-                    <li class="nav-item"><button class="ViewFavorites"> View Favorites</button></li>
+                    <li class="nav-item"><button class="ViewFavorites" onclick="window.location= 'view_favorites.php'"> View Favorites</button></li>
                 </ul>
             </div>
         </nav>

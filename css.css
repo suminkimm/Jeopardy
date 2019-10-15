@@ -56,6 +56,12 @@ a:hover {
     color:pink;
 }
 
+form {
+    margin:0;
+    padding:0;
+    display:inline;
+}
+
 .navbar {
     background:white;
 }
@@ -85,6 +91,29 @@ a:hover {
     color:gold;
 }
 
+.menu-button:hover {
+    color:pink;
+}
+
+.sign-up-button {
+    background:lightpink;
+    padding:10px;
+    width: 100px;
+}
+
+.sign-up-button:hover {
+    background:pink;
+}
+
+.log-in-button {
+    background: aquamarine;
+    padding:10px;
+    width: 100px;
+}
+
+.log-in-button:hover {
+    background: #b2ffe5;
+}
 #start-over {
     background: lightgoldenrodyellow;
     padding: 10px;
