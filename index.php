@@ -94,7 +94,7 @@
                                         <i class="fas fa-user"></i>
                                     </td>
                                     <td style="width:100%">
-                                        <input type="text" class="user-answer" name="username" placeholder="Username" required>
+                                        <input type="text" id="user-answer" name="username" placeholder="Username" required>
                                     </td>
                                 </tr>
                                 <tr>
@@ -102,7 +102,7 @@
                                         <i class="fas fa-lock"></i>
                                     </td>
                                     <td>
-                                        <input type="password" class="user-answer" placeholder="Password" name=password style="width:100%" required>
+                                        <input type="password" id="user-answer" placeholder="Password" name=password style="width:100%" required>
                                     </td>
                                 </tr>
                             </table>
@@ -119,6 +119,9 @@
 
 <?php
 if (isset($_POST['submitLogIn'])) {
+
+    echo "<script>alert(\"SubmitLogIn pressed.\")</script>";
+
     $username = $_POST['username'];
     $password = $_POST['password'];
 
