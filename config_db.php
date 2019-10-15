@@ -8,6 +8,7 @@ $conn = pg_connect("postgres://frmkuzmbtknfgk:689d7618f122e2f0f20d0bf20489d5d8e7
 
 if (!$conn) {
     echo "Database connection failed.";
+    echo pg_last_error($conn);
 }
 else {
     echo "Database connection success.";
