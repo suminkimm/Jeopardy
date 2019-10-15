@@ -63,7 +63,7 @@
                                         <input type="text" id="user-answer" name="username" placeholder="Username" required>
                                     </td>
                                     <td>
-                                        <input type="text" id="user-answer" name="password" placeholder="Password" required>
+                                        <input type="password" id="user-answer" name="password" placeholder="Password" required>
                                     </td>
                                 </tr>
                             </table>
@@ -102,7 +102,7 @@
                                         <i class="fas fa-lock"></i>
                                     </td>
                                     <td>
-                                        <input type="text" id="user-answer" placeholder="Password" name=password style="width:100%" required>
+                                        <input type="password" id="user-answer" placeholder="Password" name=password style="width:100%" required>
                                     </td>
                                 </tr>
                             </table>
@@ -157,8 +157,13 @@ elseif (isset($_POST['submitSignUp'])) {
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
+    echo "user:". $username;
+    echo "pass:". $password;
+    echo "first:".$firstname;
+    echo "last:".$lastname;
 
     $check_sql = pg_query($conn, "SELECT * FROM public.users WHERE username = '$username'");
+    echo pg_last_error($check_sql);
     // check to see if existing user
 
     if (pg_num_rows($check_sql) != 0) { // existing
