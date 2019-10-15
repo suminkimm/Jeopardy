@@ -49,10 +49,10 @@
                                         <i class="fas fa-user"></i>
                                     </td>
                                     <td>
-                                        <input type="text" class="user-answer" name="firstname" id="user-answer" placeholder="First Name" required>
+                                        <input type="text" id="user-answer" name="firstname" placeholder="First Name" required>
                                     </td>
                                     <td>
-                                        <input type="text" class="user-answer" name="lastname" placeholder="Last Name" required>
+                                        <input type="text" id="user-answer" name="lastname" placeholder="Last Name" required>
                                     </td>
                                 </tr>
                                 <tr>
@@ -60,10 +60,10 @@
                                         <i class="fas fa-lock"></i>
                                     </td>
                                     <td>
-                                        <input type="text" class="user-answer" name="username" placeholder="Username" required>
+                                        <input type="text"  id="user-answer" name="username" placeholder="Username" required>
                                     </td>
                                     <td>
-                                        <input type="password" class="user-answer" name="password" placeholder="Password" required>
+                                        <input type="password" id="user-answer" name="password" placeholder="Password" required>
                                     </td>
                                 </tr>
                             </table>
@@ -94,7 +94,7 @@
                                         <i class="fas fa-user"></i>
                                     </td>
                                     <td style="width:100%">
-                                        <input type="text" class="user-answer" id="user-answer" name="username" placeholder="Username" required>
+                                        <input type="text" class="user-answer" name="username" placeholder="Username" required>
                                     </td>
                                 </tr>
                                 <tr>
@@ -161,17 +161,11 @@ elseif (isset($_POST['submitSignUp'])) {
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
-    echo "user:". $username;
-    echo "pass:". $password;
-    echo "first:".$firstname;
-    echo "last:".$lastname;
 
-    echo "<script>alert(\"submitlogin\")</script>";
 
     $check_sql = pg_query($conn, "SELECT * FROM public.users WHERE username = '$username'");
-    echo pg_last_error($check_sql);
-//     check to see if existing user
 
+//     check to see if existing user
     if (pg_num_rows($check_sql) != 0) { // existing
         echo "<script>alert(\"This username is already taken. Please try again.\")</script>";
     }
