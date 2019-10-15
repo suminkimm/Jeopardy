@@ -42,17 +42,17 @@
                     </div>
                     <div class="modal-body">
                         <h5>Your Information</h5>
-                        <form>
+                        <form method="post" action="index.php">
                             <table class="center">
                                 <tr>
                                     <td>
                                         <i class="fas fa-user"></i>
                                     </td>
                                     <td>
-                                        <input type="text" class="input-form" name="firstname" id="user-answer" placeholder="First Name" required>
+                                        <input type="text" class="user-answer" name="firstname" id="user-answer" placeholder="First Name" required>
                                     </td>
                                     <td>
-                                        <input type="text" id="user-answer" name="lastname" placeholder="Last Name" required>
+                                        <input type="text" class="user-answer" name="lastname" placeholder="Last Name" required>
                                     </td>
                                 </tr>
                                 <tr>
@@ -60,16 +60,16 @@
                                         <i class="fas fa-lock"></i>
                                     </td>
                                     <td>
-                                        <input type="text" id="user-answer" name="username" placeholder="Username" required>
+                                        <input type="text" class="user-answer" name="username" placeholder="Username" required>
                                     </td>
                                     <td>
-                                        <input type="password" id="user-answer" name="password" placeholder="Password" required>
+                                        <input type="password" class="user-answer" name="password" placeholder="Password" required>
                                     </td>
                                 </tr>
                             </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" id="submit-answer" class="btn btn-primary" name="submitSignUp">Submit</button>
+                        <button type="submit" id="submitSignUp" class="btn btn-primary" name="submitSignUp">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                                         <i class="fas fa-user"></i>
                                     </td>
                                     <td style="width:100%">
-                                        <input type="text" class="input-form" id="user-answer" name="username" placeholder="Username" required>
+                                        <input type="text" class="user-answer" id="user-answer" name="username" placeholder="Username" required>
                                     </td>
                                 </tr>
                                 <tr>
@@ -102,13 +102,13 @@
                                         <i class="fas fa-lock"></i>
                                     </td>
                                     <td>
-                                        <input type="password" id="user-answer" placeholder="Password" name=password style="width:100%" required>
+                                        <input type="password" class="user-answer" placeholder="Password" name=password style="width:100%" required>
                                     </td>
                                 </tr>
                             </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" id="submit-answer" name="submitLogIn" class="btn btn-primary">Submit</button>
+                        <button type="submit" id="submitLogIn" name="submitLogIn" class="btn btn-primary">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -152,7 +152,11 @@ if (isset($_POST['submitLogIn'])) {
         echo "<script>alert(\"You have not created an account. Please sign up.\")</script>";
     }
 }
+
 elseif (isset($_POST['submitSignUp'])) {
+
+    echo "submitsignup";
+
     $username = $_POST['username'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $firstname = $_POST['firstname'];
@@ -162,9 +166,11 @@ elseif (isset($_POST['submitSignUp'])) {
     echo "first:".$firstname;
     echo "last:".$lastname;
 
+    echo "<script>alert(\"submitlogin\")</script>";
+
     $check_sql = pg_query($conn, "SELECT * FROM public.users WHERE username = '$username'");
     echo pg_last_error($check_sql);
-    // check to see if existing user
+//     check to see if existing user
 
     if (pg_num_rows($check_sql) != 0) { // existing
         echo "<script>alert(\"This username is already taken. Please try again.\")</script>";

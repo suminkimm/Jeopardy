@@ -128,7 +128,7 @@ form {
     text-align: center;
 }
 
-#user-answer {
+.user-answer, #user-answer {
     width: 100%;
 }
 
