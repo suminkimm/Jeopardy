@@ -130,7 +130,7 @@ if (isset($_POST['submitLogIn'])) {
     if (pg_num_rows($check_sql) != 0) { // existing
         echo "<script>alert(\"results found\")</script>";
 
-        while($row = $check_sql->fetch_assoc()) {
+        while($row = pg_fetch_assoc($check_sql)) {
             $hashed_pwd = $row['password'];
             $user_id = $row['user_id'];
             $first_name = $row['first_name'];
