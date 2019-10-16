@@ -20,12 +20,12 @@ if (pg_num_rows($result) != 0) { // already exists, delete
 }
 
 else {
-    // add into table if it doesn't already exist
-    $sql = "IF NOT EXISTS (
-        SELECT * FROM public.questions 
-        WHERE q_id = '$q_id')
-        INSERT INTO public.questions (question, answer, airdate, category, difficulty) 
-        VALUES ('$question', '$ans', '$airdate', '$category', '$difficulty')";
+    // add into questions table if it doesn't already exist
+    $sql = " INSERT INTO public.questions (question, answer, airdate, category, difficulty) 
+        VALUES ('$question', '$ans', '$airdate', '$category', '$difficulty')
+        WHERE NOT EXISTS (
+        SELECT 1 FROM public.questions 
+        WHERE q_id = '$q_id')";
     $insert_question = pg_query($conn, $sql);
 
 
