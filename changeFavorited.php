@@ -4,7 +4,7 @@ session_start();
 require('config_db.php');
 
 $user_id = $_SESSION['user_id'];
-$question = pg_escape_literal($_GET['q']);
+$question = trim(pg_escape_literal($_GET['q']),'"');
 $ans = pg_escape_literal($_GET['a']);
 $airdate = pg_escape_literal($_GET['air']);
 $category = pg_escape_literal($_GET['cat']);
