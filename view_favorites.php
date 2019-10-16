@@ -36,7 +36,7 @@ if($_SESSION['valid'] == 1) { ?>
                 </div>
             </div>
             <div class="row">
-                <table>
+                <table class="center">
                     <?php
                     $user_id = $_SESSION['user_id'];
                     $sql = "SELECT * 
