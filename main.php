@@ -195,7 +195,7 @@ if($_SESSION['valid'] == 1) { ?>
                 airdate = (airdate.getMonth() + 1) + "/" + (airdate.getDate()) + "/" + airdate.getFullYear();
             }
 
-            document.getElementsByClassName('modal-title')[0].innerText = question;
+            document.getElementsByClassName('modal-title')[0].innerText = "Q: " + question;
             document.getElementsByClassName('modal-body')[0].innerHTML =
                 '<p> Difficulty: ' + difficulty + '<p>' +
                 '<p> Category: ' + category + '<p>' +
@@ -376,7 +376,7 @@ if($_SESSION['valid'] == 1) { ?>
                 echo "</tr>";
                 echo "<span id='difficulty:" .$res['id']. "' hidden>" .$res['value']. "</span>";
                 echo "<span id='category:" .$res['id']. "' hidden>" .$res['category']['title']. "</span>";
-                echo "<span id='question:" .$res['id']. "' hidden> Q: " .$res['question']. "</span>";
+                echo "<span id='question:" .$res['id']. "' hidden>" .$res['question']. "</span>";
                 echo "<span id='answer:" .$res['id']. "' hidden>" .$res['answer']. "</span>";
                 echo "<span id='airdate:" .$res['id']. "' hidden>" .$res['airdate']. "</span>";
 

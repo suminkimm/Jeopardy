@@ -26,6 +26,7 @@ else {
         WHERE NOT EXISTS (
         SELECT 1 FROM public.questions 
         WHERE q_id = '$q_id')";
+    $sql = pg_escape_literal($conn, $sql);
     $insert_question = pg_query($conn, $sql);
 
     echo $question;
