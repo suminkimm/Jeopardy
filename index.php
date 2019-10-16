@@ -1,4 +1,6 @@
-<?php include("config_db.php"); ?>
+<?php include("config_db.php");
+session_start();
+?>
 <html>
     <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -128,7 +130,6 @@ if (isset($_POST['submitLogIn'])) {
     echo "error:" .pg_last_error($check_sql);
 
     if (pg_num_rows($check_sql) != 0) { // existing
-        echo "<script>alert(\"results found\")</script>";
 
         while($row = pg_fetch_assoc($check_sql)) {
             $hashed_pwd = $row['password'];
@@ -145,8 +146,7 @@ if (isset($_POST['submitLogIn'])) {
             $_SESSION['first_name'] = $first_name;
             $_SESSION['last_name'] = $last_name;
             $_SESSION['valid'] = 1;
-            echo "<script>alert(\"p verify.\")</script>";
-
+            
             echo "<script>window.location='main.php'</script>";
 
         }
