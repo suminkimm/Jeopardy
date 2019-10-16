@@ -144,7 +144,7 @@ if($_SESSION['valid'] == 1) { ?>
                     <p>Modal body text goes here.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="add-to-fav">Add to Favorites</button>
+                    <button type="button" class="btn btn-primary" id="add-to-fav"></button>
                 </div>
             </div>
         </div>
@@ -202,6 +202,17 @@ if($_SESSION['valid'] == 1) { ?>
                 '<p> Answer: ' + answer + '<p>' +
                 '<p> Air date: ' + airdate + '<p>';
 
+            // check if add or remove favorites
+            let addDel = document.getElementById('changeFav:' + res_id).innerText;
+            if (addDel = "add") {
+                document.getElementById('add-to-fav').innerText="Add to Favorites";
+                document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
+            }
+            else {
+                document.getElementById('add-to-fav').innerText="Remove from Favorites";
+                document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
+            }
+
             document.getElementById('myModal').style.display="inline";
 
         }
@@ -214,12 +225,31 @@ if($_SESSION['valid'] == 1) { ?>
             console.log("addToFav");
             let star = document.getElementById("star:" + res_id);
 
-            if(star.style.color == "gold") { // remove this question to favorites
+            if(star.style.color == "gold") { // remove this question from favorites
                 star.style.color = "black";
+
             }
             else { // add this question to favorites
                 star.style.color = "gold";
+
             }
+
+            let difficulty = document.getElementById("difficulty:" + res_id);
+            let category = document.getElementById("category:" + res_id);
+            let question = document.getElementById("question:" + res_id);
+            let answer = document.getElementById("answer:" + res_id);
+            let airdate = document.getElementById("airdate:" + res_id);
+
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET","changeFavorited.php?q="+question+"&a="+answer+"&air="+airdate+"&cat="+category+"&d="+difficulty+"&qid="+res_id,true);
+
+
+            xmlhttp.onreadystatechange = function() {
+                if(this.readyState == 4 && this.status == 200) {
+                    console.log(xmlhttp.responseText);
+                }
+            }
+            xmlhttp.send();
 
         }
     </script>
@@ -227,6 +257,7 @@ if($_SESSION['valid'] == 1) { ?>
     <?php
 
     if (isset($_POST['submit'])) {
+        $user_id = $_SESSION['user_id'];
         $search_ans = $_POST['search-answer'];
         $sort_by = $_POST['sortBy'];
 
@@ -240,6 +271,7 @@ if($_SESSION['valid'] == 1) { ?>
 
         $category = $_POST['categories'];
         $difficulty = $_POST['difficulty'];
+
 
         $url = "http://jservice.io/api/clues";
         $json = file_get_contents($url);
@@ -340,13 +372,23 @@ if($_SESSION['valid'] == 1) { ?>
                 echo "</td>";
                 echo "<td>";
                 echo "<button type='button' onclick='getMoreInfo(".$res['id'].")' name='moreInfo'><i class=\"fas fa-info-circle\"></i></button>";
-                echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(".$res['id'].")'><i class='fas fa-star add-to-fav'></i></button></td>";
+                echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")'><i class='fas fa-star add-to-fav'></i></button></td>";
                 echo "</tr>";
                 echo "<span id='difficulty:" .$res['id']. "' hidden>" .$res['value']. "</span>";
                 echo "<span id='category:" .$res['id']. "' hidden>" .$res['category']['title']. "</span>";
                 echo "<span id='question:" .$res['id']. "' hidden> Q: " .$res['question']. "</span>";
                 echo "<span id='answer:" .$res['id']. "' hidden>" .$res['answer']. "</span>";
                 echo "<span id='airdate:" .$res['id']. "' hidden>" .$res['airdate']. "</span>";
+
+                // check if already exists in favorites
+                $resid = $res['id'];
+                $check_fav = pg_query($conn, "SELECT * FROM public.rel_favorite_qs WHERE user_id = '$user_id' AND q_id='$resid'");
+                if (pg_num_rows($check_fav) == 0) {
+                    echo "<span id='changeFav:" .$res['id']. "' hidden>add</span>";
+                }
+                else {
+                    echo "<span id='changeFav:" .$res['id']. "' hidden>delete</span>";
+                }
 
             }
         }

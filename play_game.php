@@ -28,6 +28,7 @@ if($_SESSION['valid'] == 1) { ?>
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item"><button class="PlayGame" onclick="window.location= 'play_game.php'"> Play Game</button></li>
                     <li class="nav-item"><button class="ViewFavorites" onclick="window.location= 'view_favorites.php'"> View Favorites</button></li>
+                    <li class="nav-item"><button class="menu-button" onclick="window.location= 'logout.php'">Log Out</button></li>
                 </ul>
             </div>
         </nav>

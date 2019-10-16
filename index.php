@@ -146,7 +146,7 @@ if (isset($_POST['submitLogIn'])) {
             $_SESSION['first_name'] = $first_name;
             $_SESSION['last_name'] = $last_name;
             $_SESSION['valid'] = 1;
-            
+
             echo "<script>window.location='main.php'</script>";
 
         }

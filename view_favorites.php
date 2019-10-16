@@ -25,6 +25,7 @@ if($_SESSION['valid'] == 1) { ?>
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item"><button class="PlayGame" onclick="window.location= 'play_game.php'"> Play Game</button></li>
                     <li class="nav-item"><button class="ViewFavorites" onclick="window.location= 'view_favorites.php'"> View Favorites</button></li>
+                    <li class="nav-item"><button class="menu-button" onclick="window.location= 'logout.php'">Log Out</button></li>
                 </ul>
             </div>
         </nav>
@@ -36,8 +37,56 @@ if($_SESSION['valid'] == 1) { ?>
             </div>
             <div class="row">
                 <table>
+                    <?php
+                    $user_id = $_SESSION['user_id'];
+                    $sql = "SELECT * FROM public.rel_favorite_qs WHERE user_id='$user_id'";
+                    $result = pg_query($conn, $sql);
+                    if (pg_num_rows($result) != 0) {
+                        while ($row = pg_fetch_assoc($result)) { // now parse json
+                            echo "<tr>";
+                            echo "<td>";
+                            echo "Q:";
+                            echo "</td>";
+                            echo "<td>";
+                            echo $row['question'];
+                            echo "</td>";
+                            echo "<td>";
+                            echo "<button type='button' onclick='getMoreInfo(".$row['rel_favorite_qs_id'].")' name='moreInfo'><i class=\"fas fa-info-circle\"></i></button>";
+                            echo "<td><button type='button' id='star:" .$row['rel_favorite_qs_id']. "' onclick='changeFavorites(".$row['rel_favorite_qs_id'].")'><i class='fas fa-star add-to-fav' style='color:gold'></i></button></td>";
+                            echo "</tr>";
+                            echo "<span id='difficulty:" .$row['rel_favorite_qs_id']. "' hidden>" .$row['value']. "</span>";
+                            echo "<span id='category:" .$row['rel_favorite_qs_id']. "' hidden>" .$row['category']. "</span>";
+                            echo "<span id='question:" .$row['rel_favorite_qs_id']. "' hidden> Q: " .$row['question']. "</span>";
+                            echo "<span id='answer:" .$row['rel_favorite_qs_id']. "' hidden>" .$row['answer']. "</span>";
+                            echo "<span id='airdate:" .$row['rel_favorite_qs_id']. "' hidden>" .$row['airdate']. "</span>";
+                        }
+                    }
+                    else {
+                        echo "<tr>";
+                        echo "<td> You currently have no favorites </td>";
+                        echo "</tr>";
+                    }
+                    ?>
 
                 </table>
+            </div>
+        </div>
+        <div class="modal" id="myModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modal title</h5>
+                        <button type="button" class="close" onclick="closeModal()" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Modal body text goes here.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="add-to-fav">Add to Favorites</button>
+                    </div>
+                </div>
             </div>
         </div>
         </body>
