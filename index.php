@@ -119,16 +119,17 @@
 
 <?php
 if (isset($_POST['submitLogIn'])) {
-    
+
     $username = $_POST['username'];
     $password = $_POST['password'];
 
     // check if user exists
     $check_sql = pg_query($conn, "SELECT * FROM public.users WHERE username = '$username'");
     echo "error:" .pg_last_error($check_sql);
-    echo "<script>alert(\"SubmitLogIn pressed.\")</script>";
 
     if (pg_num_rows($check_sql) != 0) { // existing
+        echo "<script>alert(\"results found\")</script>";
+
         while($row = $check_sql->fetch_assoc()) {
             $hashed_pwd = $row['password'];
             $user_id = $row['user_id'];
