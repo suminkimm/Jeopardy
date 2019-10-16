@@ -24,7 +24,7 @@ else {
     // add into questions table if it doesn't already exist
 
     $sql = " INSERT INTO public.questions (question, answer, airdate, category, difficulty, q_id) 
-        SELECT ($question, $ans, $airdate, $category, $difficulty, $q_id)
+        SELECT $question, $ans, $airdate, $category, $difficulty, $q_id
             WHERE NOT EXISTS (
             SELECT 1 FROM public.questions 
             WHERE q_id = $q_id)";
