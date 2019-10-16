@@ -234,11 +234,11 @@ if($_SESSION['valid'] == 1) { ?>
 
             }
 
-            let difficulty = document.getElementById("difficulty:" + res_id);
-            let category = document.getElementById("category:" + res_id);
-            let question = document.getElementById("question:" + res_id);
-            let answer = document.getElementById("answer:" + res_id);
-            let airdate = document.getElementById("airdate:" + res_id);
+            let difficulty = document.getElementById("difficulty:" + res_id).innerText;
+            let category = document.getElementById("category:" + res_id).innerText;
+            let question = document.getElementById("question:" + res_id).innerText;
+            let answer = document.getElementById("answer:" + res_id).innerText;
+            let airdate = document.getElementById("airdate:" + res_id).innerText;
 
             xmlhttp = new XMLHttpRequest();
             xmlhttp.open("GET","changeFavorited.php?q="+question+"&a="+answer+"&air="+airdate+"&cat="+category+"&d="+difficulty+"&qid="+res_id,true);
