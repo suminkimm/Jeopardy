@@ -119,15 +119,14 @@
 
 <?php
 if (isset($_POST['submitLogIn'])) {
-
-    echo "<script>alert(\"SubmitLogIn pressed.\")</script>";
-
+    
     $username = $_POST['username'];
     $password = $_POST['password'];
 
     // check if user exists
     $check_sql = pg_query($conn, "SELECT * FROM public.users WHERE username = '$username'");
     echo "error:" .pg_last_error($check_sql);
+    echo "<script>alert(\"SubmitLogIn pressed.\")</script>";
 
     if (pg_num_rows($check_sql) != 0) { // existing
         while($row = $check_sql->fetch_assoc()) {
