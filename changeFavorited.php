@@ -30,14 +30,6 @@ else {
             WHERE q_id = $q_id)";
     $insert_question = pg_query($conn, $sql);
 
-    echo $question;
-    echo $ans;
-    echo $airdate;
-    echo $category;
-    echo $difficulty;
-    echo $q_id;
-    echo $sql;
-    echo "error: " .pg_last_error($conn);
 
     if ($insert_question) {
         $sql = "INSERT INTO public.rel_favorite_qs (user_id, question_id) VALUES ('$user_id', '$q_id')";

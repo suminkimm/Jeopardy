@@ -39,7 +39,11 @@ if($_SESSION['valid'] == 1) { ?>
                 <table>
                     <?php
                     $user_id = $_SESSION['user_id'];
-                    $sql = "SELECT * FROM public.rel_favorite_qs WHERE user_id='$user_id'";
+                    $sql = "SELECT * 
+                    FROM public.rel_favorite_qs rfq
+                    INNER JOIN public.questions q
+                    ON rfq.question_id=q.q_id
+                    WHERE user_id='$user_id'";
                     $result = pg_query($conn, $sql);
                     if (pg_num_rows($result) != 0) {
                         while ($row = pg_fetch_assoc($result)) { // now parse json
