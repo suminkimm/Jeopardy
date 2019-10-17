@@ -159,7 +159,6 @@ if($_SESSION['valid'] == 1) { ?>
             if (x.style.display == "none") {
                 x.style.display = "block";
                 button.innerHTML = "<i class=\"fas fa-minus-circle\"></i>";
-                console.log("block");
 
             } else {
                 console.log("none");
@@ -212,17 +211,6 @@ if($_SESSION['valid'] == 1) { ?>
             }
             xmlhttp.open("GET","checkIfFavorited.php?q="+res_id,true);
             xmlhttp.send();
-            // document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
-            //
-            // let addDel = document.getElementById('changeFav:' + res_id).innerText;
-            // if (addDel == "add") {
-            //     document.getElementById('add-to-fav').innerText="Add to Favorites";
-            //     document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
-            // }
-            // else {
-            //     document.getElementById('add-to-fav').innerText="Remove from Favorites";
-            //     document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
-            // }
 
             document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
             document.getElementById('myModal').style.display="inline";

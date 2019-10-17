@@ -26,8 +26,8 @@ if($_SESSION['valid'] == 1) { ?>
                     <a class="navbar-brand" href="main.php" style="font-size: 30px;">Jeopardy!</a>
                 </div>
                 <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item"><button class="PlayGame" onclick="window.location= 'play_game.php'"> Play Game</button></li>
-                    <li class="nav-item"><button class="ViewFavorites" onclick="window.location= 'view_favorites.php'"> View Favorites</button></li>
+                    <li class="nav-item"><button class="menu-button" onclick="window.location= 'play_game.php'"> Play Game</button></li>
+                    <li class="nav-item"><button class="menu-button" onclick="window.location= 'view_favorites.php'"> View Favorites</button></li>
                     <li class="nav-item"><button class="menu-button" onclick="window.location= 'logout.php'">Log Out</button></li>
                 </ul>
             </div>
