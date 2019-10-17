@@ -203,23 +203,39 @@ if($_SESSION['valid'] == 1) { ?>
                 '<p> Air date: ' + airdate + '<p>';
 
             // check if add or remove favorites
-            let addDel = document.getElementById('changeFav:' + res_id).innerText;
-            if (addDel == "add") {
-                document.getElementById('add-to-fav').innerText="Add to Favorites";
-                document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
-            }
-            else {
-                document.getElementById('add-to-fav').innerText="Remove from Favorites";
-                document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
-            }
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET","checkIfFavorited.php?q="+res_id,true);
 
+
+            xmlhttp.onreadystatechange = function() {
+                if(this.readyState == 4 && this.status == 200) {
+                    console.log(xmlhttp.responseText);
+                    document.getElementById('add-to-fav').innerText=this.responseText;
+                }
+            }
+            xmlhttp.send();
+            // document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
+            //
+            // let addDel = document.getElementById('changeFav:' + res_id).innerText;
+            // if (addDel == "add") {
+            //     document.getElementById('add-to-fav').innerText="Add to Favorites";
+            //     document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
+            // }
+            // else {
+            //     document.getElementById('add-to-fav').innerText="Remove from Favorites";
+            //     document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
+            // }
+
+            document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
             document.getElementById('myModal').style.display="inline";
 
         }
 
+
         function closeModal() {
             document.getElementById('myModal').style.display="none";
         }
+
 
         function changeFavorites(res_id) {
             console.log("addToFav");
