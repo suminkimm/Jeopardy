@@ -43,94 +43,95 @@ if($_SESSION['valid'] == 1) { ?>
                     <h1>My Favorite Q's!</h1>
                 </div>
             </div>
-            <div class="row" style="text-align: center;">
-                <form method="post" action="view_favorites.php">
+            <form method="post" action="view_favorites.php">
+                <div class="row" style="text-align: center;">
                     <div class="col-lg-12 col-xs-12 search-bar">
                         <input type="text" name="search-answer" placeholder="Search by question keywords (ex: device papers)">
                         <button type="submit" name="submit"><i class="fa fa-search"></i></button>
                         <button type="button" id="show-hide" onclick="showDiv()"><i class="fas fa-plus-circle"></i></button>
                     </div>
-                    <div class="advanced-search" style="display: none;">
-                        <div class="row" style="text-align: center;">
-                            <div class="col-lg-12 col-xs-12">
-                                <table class="center">
-                                    <tr>
-                                        <td>
-                                            Timeframe aired:
-                                        </td>
-                                        <td>
-                                            <input type="text" name="from-date" class="datepicker" placeholder="From">
-                                        </td>
-                                        <td>
-                                            <input type="text" name="to-date" class="datepicker" placeholder="To">
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <script type="text/javascript">
-                                $('.datepicker').datepicker();
-                            </script>
+                </div>
+                <div class="advanced-search" style="display: none;">
+                    <div class="row" style="text-align: center;">
+                        <div class="col-lg-12 col-xs-12">
+                            <table class="center">
+                                <tr>
+                                    <td>
+                                        Timeframe aired:
+                                    </td>
+                                    <td>
+                                        <input type="text" name="from-date" class="datepicker" placeholder="From">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="to-date" class="datepicker" placeholder="To">
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
-                        <div class="row" style="text-align: center;">
-                            <div class="col-lg-12 col-xs-12" style="text-align: center;">
-                                <table class="center">
-                                    <tr>
-                                        <td>
-                                            Category:
-                                            <select name="categories">
-                                                <option value="">Select Category</option>
-                                                <?php
-                                                $url = "http://jservice.io/api/clues";
-                                                $json = file_get_contents($url);
-                                                $categories = json_decode($json, true);
+                        <script type="text/javascript">
+                            $('.datepicker').datepicker();
+                        </script>
+                    </div>
+                    <div class="row" style="text-align: center;">
+                        <div class="col-lg-12 col-xs-12" style="text-align: center;">
+                            <table class="center">
+                                <tr>
+                                    <td>
+                                        Category:
+                                        <select name="categories">
+                                            <option value="">Select Category</option>
+                                            <?php
+                                            $url = "http://jservice.io/api/clues";
+                                            $json = file_get_contents($url);
+                                            $categories = json_decode($json, true);
 
-                                                // sort alphabetically
-                                                usort($categories, function ($a, $b) {
-                                                    return $a['category']['title'] <=> $b['category']['title'];
-                                                });
+                                            // sort alphabetically
+                                            usort($categories, function ($a, $b) {
+                                                return $a['category']['title'] <=> $b['category']['title'];
+                                            });
 
-                                                $unique_categories_id = array();
+                                            $unique_categories_id = array();
 
-                                                // show only unique categories
-                                                foreach ($categories as $category) {
-                                                    if (!in_array($category['category']['id'], $unique_categories_id)) {
-                                                        array_push($unique_categories_id, $category['category']['id']);
-                                                        echo "<option value=". $category['category']['title'] .">". $category['category']['title'] ."</option>";
-                                                    }
+                                            // show only unique categories
+                                            foreach ($categories as $category) {
+                                                if (!in_array($category['category']['id'], $unique_categories_id)) {
+                                                    array_push($unique_categories_id, $category['category']['id']);
+                                                    echo "<option value=". $category['category']['title'] .">". $category['category']['title'] ."</option>";
                                                 }
-                                                ?>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            Difficulty:
-                                            <select name="difficulty">
-                                                <option value="">Select Difficulty</option>
-                                                <?php
-                                                $i = 100;
-                                                while ($i <= 1000) {
-                                                    echo "<option value=".$i.">".$i."</option>";
-                                                    $i += 100;
-                                                }
-                                                ?>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="row" style="text-align: center">
-                            <div class="col-lg-12 col-xs-12" style="text-align: center">
-                                Sort Results By:
-                                <select name="sortBy">
-                                    <option value="1">A-Z</option>
-                                    <option value="2">Z-A</option>
-                                    <option value="3">Difficulty</option>
-                                </select>
-                            </div>
+                                            }
+                                            ?>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        Difficulty:
+                                        <select name="difficulty">
+                                            <option value="">Select Difficulty</option>
+                                            <?php
+                                            $i = 100;
+                                            while ($i <= 1000) {
+                                                echo "<option value=".$i.">".$i."</option>";
+                                                $i += 100;
+                                            }
+                                            ?>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
-                </form>
-            </div>
+                    <div class="row" style="text-align: center">
+                        <div class="col-lg-12 col-xs-12" style="text-align: center">
+                            Sort Results By:
+                            <select name="sortBy">
+                                <option value="1">A-Z</option>
+                                <option value="2">Z-A</option>
+                                <option value="3">Difficulty</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
             <div class="row">
                 <table class="center">
                     <?php
