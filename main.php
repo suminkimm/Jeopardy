@@ -224,13 +224,16 @@ if($_SESSION['valid'] == 1) { ?>
         function changeFavorites(res_id) {
             console.log("addToFav");
             let star = document.getElementById("star:" + res_id);
+            let addToFavButton = document.getElementById("add-to-fav");
 
-            if(star.style.color == "gold") { // remove this question from favorites
+            if(star.style.color == "gold" || addToFavButton.innerText=="Remove from Favorites") { // remove this question from favorites
                 star.style.color = "black";
+                addToFavButton.innerText="Add to Favorites";
 
             }
             else { // add this question to favorites
                 star.style.color = "gold";
+                addToFavButton.innerText="Remove from Favorites";
 
             }
 
