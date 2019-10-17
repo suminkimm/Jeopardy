@@ -161,7 +161,7 @@ if($_SESSION['valid'] == 1) { ?>
                         ON rfq.question_id=q.q_id
                         WHERE user_id='$user_id'";
 
-                        if ($search_ans != null) {
+                        if ($search_ans != '') { // empty string
                             foreach($search_ans as $keyword) {
                                 $sql .= " AND q.question LIKE '%".$keyword."'";
                             }
