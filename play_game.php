@@ -141,6 +141,9 @@ if($_SESSION['valid'] == 1) { ?>
                 for (let i = 0; i < data.length; i++) {
                     if (!questions_arr.includes(data[i].id)) {
                         let question = data[i].question;
+                        if (question == '') {
+                            question = "N/A";
+                        }
                         let answer = data[i].answer;
                         let id = data[i].id;
                         questions_arr.push(id);
