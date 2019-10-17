@@ -97,7 +97,7 @@ if($_SESSION['valid'] == 1) { ?>
             </div>
             <div class="row">
                 <div class="col-lg-12 col-xs-12" style="text-align: center;">
-                    <button type="button" id="start-over" >Start Over</button>
+                    <button type="button" id="start-over" onclick="window.location.reload()">Start Over</button>
                 </div>
             </div>
         </div>
