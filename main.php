@@ -367,7 +367,7 @@ if($_SESSION['valid'] == 1) { ?>
                 // check if the question already exists in favorites
                 $exists = 0;
                 $resid = $res['id'];
-                $check_fav = pg_query($conn, "SELECT * FROM public.rel_favorite_qs WHERE user_id = '$user_id' AND q_id='$resid'");
+                $check_fav = pg_query($conn, "SELECT * FROM public.rel_favorite_qs WHERE user_id = '$user_id' AND question_id='$resid'");
                 if (pg_num_rows($check_fav)!=0) {
                     $exists = 1;
                 }
@@ -383,7 +383,7 @@ if($_SESSION['valid'] == 1) { ?>
                 echo "<td>";
                 echo "<button type='button' onclick='getMoreInfo(".$res['id'].")' name='moreInfo'><i class=\"fas fa-info-circle\"></i></button>";
                 ?>
-                <td><button type='button' id='star:<?php echo $res['id']; ?>'onclick='changeFavorites( <?php echo $res['id']; ?>)'>
+                <td><button type='button' id='star:<?php echo $res['id']; ?>'onclick='changeFavorites(<?php echo $res['id']; ?>)'>
                 <?php
                 if ($exists == 1) { // star is gold if favorited
                     echo "<i class='fas fa-star add-to-fav' style='color:gold'></i></button></td>";
