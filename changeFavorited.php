@@ -13,7 +13,7 @@ $difficulty = $_GET['d'];
 $q_id = $_GET['qid'];
 
 // check if delete
-$sql = "SELECT * FROM spublic.rel_favorite_qs WHERE user_id='$user_id' AND question_id='$q_id'";
+$sql = "SELECT * FROM public.rel_favorite_qs WHERE user_id='$user_id' AND question_id='$q_id'";
 $result = pg_query($conn, $sql);
 
 if (pg_num_rows($result) != 0) { // already exists, delete
