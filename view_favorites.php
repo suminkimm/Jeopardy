@@ -44,17 +44,173 @@ if($_SESSION['valid'] == 1) { ?>
                 </div>
             </div>
             <div class="row">
+                <form method="post" action="view_favorites.php">
+                    <div class="advanced-search">
+                        <div class="col-lg-12 col-xs-12 search-bar">
+                            <input type="text" name="search-answer" placeholder="Search by question keywords (ex: device, papers)">
+                            <button type="submit" name="submit"><i class="fa fa-search"></i></button>
+                            <button type="button" id="show-hide" onclick="showDiv()"><i class="fas fa-plus-circle"></i></button>
+                        </div>
+                    </div>
+                    <div class="advanced-search" style="display: none;">
+                        <div class="row" style="text-align: center;">
+                            <div class="col-lg-12 col-xs-12">
+                                <table class="center">
+                                    <tr>
+                                        <td>
+                                            Timeframe aired:
+                                        </td>
+                                        <td>
+                                            <input type="text" name="from-date" class="datepicker" placeholder="From">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="to-date" class="datepicker" placeholder="To">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <script type="text/javascript">
+                                $('.datepicker').datepicker();
+                            </script>
+                        </div>
+                        <div class="row" style="text-align: center;">
+                            <div class="col-lg-12 col-xs-12" style="text-align: center;">
+                                <table class="center">
+                                    <tr>
+                                        <td>
+                                            Category:
+                                            <select name="categories">
+                                                <option value="">Select Category</option>
+                                                <?php
+                                                $url = "http://jservice.io/api/clues";
+                                                $json = file_get_contents($url);
+                                                $categories = json_decode($json, true);
+
+                                                // sort alphabetically
+                                                usort($categories, function ($a, $b) {
+                                                    return $a['category']['title'] <=> $b['category']['title'];
+                                                });
+
+                                                $unique_categories_id = array();
+
+                                                // show only unique categories
+                                                foreach ($categories as $category) {
+                                                    if (!in_array($category['category']['id'], $unique_categories_id)) {
+                                                        array_push($unique_categories_id, $category['category']['id']);
+                                                        echo "<option value=". $category['category']['title'] .">". $category['category']['title'] ."</option>";
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            Difficulty:
+                                            <select name="difficulty">
+                                                <option value="">Select Difficulty</option>
+                                                <?php
+                                                $i = 100;
+                                                while ($i <= 1000) {
+                                                    echo "<option value=".$i.">".$i."</option>";
+                                                    $i += 100;
+                                                }
+                                                ?>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row" style="text-align: center">
+                            <div class="col-lg-12 col-xs-12" style="text-align: center">
+                                Sort Results By:
+                                <select name="sortBy">
+                                    <option value="1">A-Z</option>
+                                    <option value="2">Z-A</option>
+                                    <option value="3">Difficulty</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
                 <table class="center">
                     <?php
                     $user_id = $_SESSION['user_id'];
-                    $sql = "SELECT * 
-                    FROM public.rel_favorite_qs rfq
-                    INNER JOIN public.questions q
-                    ON rfq.question_id=q.q_id
-                    WHERE user_id='$user_id'";
+                    if (isset($_POST['submit'])) {
+                        $search_ans = $_POST['search-answer'];
+                        // convert to array to separate key words
+                        $search_ans = explode(", ", $search_ans);
+
+                        $sort_by = $_POST['sortBy'];
+
+                        if ($_POST['from-date'] != null) {
+                            $from_date = date("Y-m-d", strtotime($_POST['from-date']));
+                        }
+
+                        if ($_POST['to-date'] != null) {
+                            $to_date = date("Y-m-d", strtotime($_POST['to-date']));
+                        }
+
+                        $category = $_POST['categories'];
+                        $difficulty = $_POST['difficulty'];
+
+                        $sql = "SELECT * 
+                        FROM public.rel_favorite_qs rfq
+                        INNER JOIN public.questions q
+                        ON rfq.question_id=q.q_id
+                        WHERE user_id='$user_id'";
+
+                        if ($search_ans != null) {
+                            foreach($search_ans as $keyword) {
+                                $sql .= " AND q.question LIKE '%".$keyword."'";
+                            }
+                        }
+
+                        if ($from_date != null || $to_date != null) { // both dates
+
+                            if ($from_date != null && $to_date !== null) {
+                                $sql .= " AND q.airdate >= '$from_date' AND q.airdate <= '$to_date'";
+                            }
+                            elseif ($from_date == null) {
+                                $sql .= " AND q.airdate <= '$to_date'";
+                            }
+                            else {
+                                $sql .= " AND q.airdate >= '$from_date'";
+                            }
+                        }
+
+                        if ($category != null) {
+                            $sql .= " AND q.category = '$category'";
+                        }
+
+                        if ($difficulty != null) {
+                            $sql .= " AND q.difficulty = '$difficulty'";
+                        }
+
+                        if ($sort_by == null || $sort_by == 1) {
+                            $sql .= " SORT BY q.question ASC";
+                        }
+
+                        elseif ($sort_by == 2) {
+                            $sql .= " SORT BY q.question DESC";
+                        }
+
+                        else {
+                            $sql .= " SORT BY q.difficulty ASC";
+                        }
+                    }
+                    else {
+                        $sql = "SELECT * 
+                        FROM public.rel_favorite_qs rfq
+                        INNER JOIN public.questions q
+                        ON rfq.question_id=q.q_id
+                        WHERE user_id='$user_id'";
+                    }
+
                     $result = pg_query($conn, $sql);
                     if (pg_num_rows($result) != 0) {
-                        while ($row = pg_fetch_assoc($result)) { // now parse json
+                        while ($row = pg_fetch_assoc($result)) { // now parse results
                             echo "<tr>";
                             echo "<td>";
                             echo "Q:";
