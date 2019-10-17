@@ -131,7 +131,7 @@ if($_SESSION['valid'] == 1) { ?>
 
         function viewQuestion(cat_id, value, td_id) {
             let request = new XMLHttpRequest()
-            let url = 'https://jservice.io/api/clues?value=' + value + '&category=' + cat_id;
+            let url = 'http://jservice.io/api/clues?value=' + value + '&category=' + cat_id;
             request.open('GET', url, true)
 
             request.onload = function() {
