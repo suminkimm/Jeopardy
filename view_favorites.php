@@ -208,6 +208,7 @@ if($_SESSION['valid'] == 1) { ?>
                         WHERE user_id='$user_id'";
                     }
 
+                    echo "sql: ".$sql;
                     $result = pg_query($conn, $sql);
                     if (pg_num_rows($result) != 0) {
                         while ($row = pg_fetch_assoc($result)) { // now parse results
