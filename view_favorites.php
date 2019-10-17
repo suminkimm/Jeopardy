@@ -44,6 +44,7 @@ if($_SESSION['valid'] == 1) { ?>
                 </div>
             </div>
             <div class="row">
+                <div class="col-lg-12 col-xs-12">
                 <form method="post" action="view_favorites.php">
                     <div class="advanced-search">
                         <div class="col-lg-12 col-xs-12 search-bar">
@@ -120,6 +121,7 @@ if($_SESSION['valid'] == 1) { ?>
                                 </table>
                             </div>
                         </div>
+                    </div>
                         <div class="row" style="text-align: center">
                             <div class="col-lg-12 col-xs-12" style="text-align: center">
                                 Sort Results By:
@@ -270,6 +272,22 @@ else {
 }
 ?>
 <script type="text/javascript">
+
+    function showDiv() {
+        let x = document.getElementsByClassName('advanced-search')[0];
+        let button = document.getElementById('show-hide');
+        if (x.style.display == "none") {
+            x.style.display = "block";
+            button.innerHTML = "<i class=\"fas fa-minus-circle\"></i>";
+
+        } else {
+            console.log("none");
+            x.style.display = "none";
+            button.innerHTML = "<i class=\"fas fa-plus-circle\"></i>";
+
+        }
+    }
+
     function getMoreInfo(res_id) {
         let difficulty = document.getElementById('difficulty:' + res_id).innerText;
         if (difficulty == '') {
