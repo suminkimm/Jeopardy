@@ -385,14 +385,12 @@ if($_SESSION['valid'] == 1) { ?>
                 echo "</td>";
                 echo "<td>";
                 echo "<button type='button' onclick='getMoreInfo(".$res['id'].")' name='moreInfo'><i class=\"fas fa-info-circle\"></i></button>";
-                ?>
-                <td><button type='button' id='star:<?php echo $res['id']; ?>'onclick='changeFavorites(<?php echo $res['id']; ?>)'>
-                <?php
+
                 if ($exists == 1) { // star is gold if favorited
-                    echo "<i class='fas fa-star add-to-fav' style='color:gold'></i></button></td>";
+                    echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")' style='color:gold'><i class='fas fa-star add-to-fav'></i></button></td>";
                 }
                 else {
-                    echo "<i class='fas fa-star add-to-fav' style='color:black'></i></button></td>";
+                    echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")' style='color:black'><i class='fas fa-star add-to-fav'></i></button></td>";
                 }
 
                 echo "</tr>";

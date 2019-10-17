@@ -59,7 +59,7 @@ if($_SESSION['valid'] == 1) { ?>
                             echo "</td>";
                             echo "<td>";
                             echo "<button type='button' onclick='getMoreInfo(".$row['rel_favorite_qs_id'].")' name='moreInfo'><i class=\"fas fa-info-circle\"></i></button>";
-                            echo "<td><button type='button' id='star:" .$row['rel_favorite_qs_id']. "' onclick='changeFavorites(".$row['rel_favorite_qs_id'].")'><i class='fas fa-star add-to-fav' style='color:gold'></i></button></td>";
+                            echo "<td><button type='button' id='star:" .$row['rel_favorite_qs_id']. "' onclick='changeFavorites(".$row['rel_favorite_qs_id'].")' style='color:gold'><i class='fas fa-star add-to-fav'></i></button></td>";
                             echo "</tr>";
                             echo "<span id='difficulty:" .$row['rel_favorite_qs_id']. "' hidden>" .$row['value']. "</span>";
                             echo "<span id='category:" .$row['rel_favorite_qs_id']. "' hidden>" .$row['category']. "</span>";
