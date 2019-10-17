@@ -204,7 +204,7 @@ if($_SESSION['valid'] == 1) { ?>
 
             // check if add or remove favorites
             let addDel = document.getElementById('changeFav:' + res_id).innerText;
-            if (addDel = "add") {
+            if (addDel == "add") {
                 document.getElementById('add-to-fav').innerText="Add to Favorites";
                 document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
             }
