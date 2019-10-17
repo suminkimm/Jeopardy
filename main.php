@@ -204,15 +204,13 @@ if($_SESSION['valid'] == 1) { ?>
 
             // check if add or remove favorites
             xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET","checkIfFavorited.php?q="+res_id,true);
-
-
             xmlhttp.onreadystatechange = function() {
                 if(this.readyState == 4 && this.status == 200) {
-                    console.log(xmlhttp.responseText);
-                    document.getElementById('add-to-fav').innerText=this.responseText;
+                    console.log("response" + this.response);
+                    document.getElementById('add-to-fav').innerText=this.response;
                 }
             }
+            xmlhttp.open("GET","checkIfFavorited.php?q="+res_id,true);
             xmlhttp.send();
             // document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
             //
