@@ -47,7 +47,7 @@ if($_SESSION['valid'] == 1) { ?>
                 <form method="post" action="view_favorites.php">
                     <div class="advanced-search">
                         <div class="col-lg-12 col-xs-12 search-bar">
-                            <input type="text" name="search-answer" placeholder="Search by question keywords (ex: device, papers)">
+                            <input type="text" name="search-answer" placeholder="Search by question keywords (ex: device papers)">
                             <button type="submit" name="submit"><i class="fa fa-search"></i></button>
                             <button type="button" id="show-hide" onclick="showDiv()"><i class="fas fa-plus-circle"></i></button>
                         </div>
@@ -140,7 +140,7 @@ if($_SESSION['valid'] == 1) { ?>
                     if (isset($_POST['submit'])) {
                         $searched_keyword = $_POST['search-answer'];
                         // convert to array to separate key words
-                        $search_ans = explode(", ", $searched_keyword);
+                        $search_ans = explode(" ", $searched_keyword);
 
                         $sort_by = $_POST['sortBy'];
 
@@ -163,7 +163,7 @@ if($_SESSION['valid'] == 1) { ?>
 
                         if ($searched_keyword != '') { // empty string
                             foreach($search_ans as $keyword) {
-                                $sql .= " AND q.question LIKE '%".$keyword."'";
+                                $sql .= " AND q.question LIKE '%".$keyword."%'";
                             }
                         }
 
@@ -226,7 +226,7 @@ if($_SESSION['valid'] == 1) { ?>
                             echo "<button type='button' onclick='getMoreInfo(" .$row['q_id']. ")' name='moreInfo'><i class=\"fas fa-info-circle\"></i></button>";
                             echo "<td><button type='button' id='star:" .$row['q_id']. "' onclick='changeFavorites(".$row['q_id'].")' style='color:gold'><i class='fas fa-star add-to-fav'></i></button></td>";
                             echo "</tr>";
-                            echo "<span id='difficulty:" .$row['q_id']. "' hidden>" .$row['value']. "</span>";
+                            echo "<span id='difficulty:" .$row['q_id']. "' hidden>" .$row['difficulty']. "</span>";
                             echo "<span id='category:" .$row['q_id']. "' hidden>" .$row['category']. "</span>";
                             echo "<span id='question:" .$row['q_id']. "' hidden>" .$row['question']. "</span>";
                             echo "<span id='answer:" .$row['q_id']. "' hidden>" .$row['answer']. "</span>";
