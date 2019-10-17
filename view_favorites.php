@@ -71,7 +71,7 @@ if($_SESSION['valid'] == 1) { ?>
                             echo "</tr>";
                             echo "<span id='difficulty:" .$row['q_id']. "' hidden>" .$row['value']. "</span>";
                             echo "<span id='category:" .$row['q_id']. "' hidden>" .$row['category']. "</span>";
-                            echo "<span id='question:" .$row['q_id']. "' hidden> Q: " .$row['question']. "</span>";
+                            echo "<span id='question:" .$row['q_id']. "' hidden>" .$row['question']. "</span>";
                             echo "<span id='answer:" .$row['q_id']. "' hidden>" .$row['answer']. "</span>";
                             echo "<span id='airdate:" .$row['q_id']. "' hidden>" .$row['airdate']. "</span>";
                         }
