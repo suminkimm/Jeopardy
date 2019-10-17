@@ -31,9 +31,8 @@ else {
     $insert_question = pg_query($conn, $sql);
 
 
-    if ($insert_question) {
-        $sql = "INSERT INTO public.rel_favorite_qs (user_id, question_id) VALUES ('$user_id', '$q_id')";
-        $insert_rel_table = pg_query($conn, $sql);
-    }
+    $sql = "INSERT INTO public.rel_favorite_qs (user_id, question_id) VALUES ('$user_id', '$q_id')";
+    $insert_rel_table = pg_query($conn, $sql);
+
 }
 
