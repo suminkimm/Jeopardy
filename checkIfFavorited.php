@@ -11,4 +11,4 @@ $check_fav = pg_query($conn, "SELECT * FROM public.rel_favorite_qs WHERE user_id
 if (pg_num_rows($check_fav)!=0) {
     $exists = "Remove from Favorites";
 }
-return $exists;
+echo $exists;
