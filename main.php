@@ -400,10 +400,10 @@ if($_SESSION['valid'] == 1) { ?>
                 echo "<span id='airdate:" .$res['id']. "' hidden>" .$res['airdate']. "</span>";
 
                 if ($exists != 0) {
-                    echo "<span id='changeFav:" .$res['id']. "' hidden>add</span>";
+                    echo "<span id='changeFav:" .$res['id']. "' hidden>delete</span>";
                 }
                 else {
-                    echo "<span id='changeFav:" .$res['id']. "' hidden>delete</span>";
+                    echo "<span id='changeFav:" .$res['id']. "' hidden>add</span>";
                 }
 
             }
