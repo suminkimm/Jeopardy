@@ -44,9 +44,8 @@ if($_SESSION['valid'] == 1) { ?>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-12 col-xs-12">
                 <form method="post" action="view_favorites.php">
-                    <div class="advanced-search">
+                    <div class="advanced-search" style="text-align: center;">
                         <div class="col-lg-12 col-xs-12 search-bar">
                             <input type="text" name="search-answer" placeholder="Search by question keywords (ex: device papers)">
                             <button type="submit" name="submit"><i class="fa fa-search"></i></button>
@@ -121,7 +120,6 @@ if($_SESSION['valid'] == 1) { ?>
                                 </table>
                             </div>
                         </div>
-                    </div>
                         <div class="row" style="text-align: center">
                             <div class="col-lg-12 col-xs-12" style="text-align: center">
                                 Sort Results By:
