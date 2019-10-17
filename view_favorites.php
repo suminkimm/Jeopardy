@@ -138,9 +138,9 @@ if($_SESSION['valid'] == 1) { ?>
                     <?php
                     $user_id = $_SESSION['user_id'];
                     if (isset($_POST['submit'])) {
-                        $search_ans = $_POST['search-answer'];
+                        $searched_keyword = $_POST['search-answer'];
                         // convert to array to separate key words
-                        $search_ans = explode(", ", $search_ans);
+                        $search_ans = explode(", ", $searched_keyword);
 
                         $sort_by = $_POST['sortBy'];
 
@@ -161,7 +161,7 @@ if($_SESSION['valid'] == 1) { ?>
                         ON rfq.question_id=q.q_id
                         WHERE user_id='$user_id'";
 
-                        if ($search_ans != '') { // empty string
+                        if ($searched_keyword != '') { // empty string
                             foreach($search_ans as $keyword) {
                                 $sql .= " AND q.question LIKE '%".$keyword."'";
                             }
