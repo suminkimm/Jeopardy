@@ -46,7 +46,7 @@ if($_SESSION['valid'] == 1) { ?>
             <form method="post" action="view_favorites.php">
                 <div class="row" style="text-align: center;">
                     <div class="col-lg-12 col-xs-12 search-bar">
-                        <input type="text" name="search-answer" placeholder="Search by question keywords (ex: device papers)">
+                        <input type="text" name="search-answer" placeholder="Search by question keywords">
                         <button type="submit" name="submit"><i class="fa fa-search"></i></button>
                         <button type="button" id="show-hide" onclick="showDiv()"><i class="fas fa-plus-circle"></i></button>
                     </div>
