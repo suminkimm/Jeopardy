@@ -55,6 +55,9 @@ if($_SESSION['valid'] == 1) { ?>
                             echo $row['question'];
                             echo "</td>";
                             echo "<td>";
+                            echo $row['category'];
+                            echo "</td>";
+                            echo "<td>";
                             echo "<button type='button' onclick='getMoreInfo(".$row['rel_favorite_qs_id'].")' name='moreInfo'><i class=\"fas fa-info-circle\"></i></button>";
                             echo "<td><button type='button' id='star:" .$row['rel_favorite_qs_id']. "' onclick='changeFavorites(".$row['rel_favorite_qs_id'].")'><i class='fas fa-star add-to-fav' style='color:gold'></i></button></td>";
                             echo "</tr>";
@@ -88,7 +91,7 @@ if($_SESSION['valid'] == 1) { ?>
                         <p>Modal body text goes here.</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="add-to-fav">Add to Favorites</button>
+                        <button type="button" class="btn btn-primary" id="add-to-fav"></button>
                     </div>
                 </div>
             </div>

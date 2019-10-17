@@ -363,6 +363,15 @@ if($_SESSION['valid'] == 1) { ?>
 
         foreach($results as $res) {
             if ($res['question'] != "") {
+
+                // check if the question already exists in favorites
+                $resid = $res['id'];
+                $check_fav = pg_query($conn, "SELECT * FROM public.rel_favorite_qs WHERE user_id = '$user_id' AND q_id='$resid'");
+                if (pg_num_rows($check_fav)!=0) {
+                    $exists = 1;
+                }
+
+                // build search results table of jeopardy questions
                 echo "<tr>";
                 echo "<td>";
                 echo "Q:";
@@ -372,7 +381,16 @@ if($_SESSION['valid'] == 1) { ?>
                 echo "</td>";
                 echo "<td>";
                 echo "<button type='button' onclick='getMoreInfo(".$res['id'].")' name='moreInfo'><i class=\"fas fa-info-circle\"></i></button>";
-                echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")'><i class='fas fa-star add-to-fav'></i></button></td>";
+                ?>
+                <td><button type='button' id='star:<?php echo $res['id']; ?>'onclick='changeFavorites( <?php echo $res['id']; ?>)'>
+                <?php
+                if ($exists == 1) { // star is gold if favorited
+                    echo "<i class='fas fa-star add-to-fav' style='color:gold'></i></button></td>";
+                }
+                else {
+                    echo "<i class='fas fa-star add-to-fav' style='color:black'></i></button></td>";
+                }
+
                 echo "</tr>";
                 echo "<span id='difficulty:" .$res['id']. "' hidden>" .$res['value']. "</span>";
                 echo "<span id='category:" .$res['id']. "' hidden>" .$res['category']['title']. "</span>";
@@ -380,10 +398,7 @@ if($_SESSION['valid'] == 1) { ?>
                 echo "<span id='answer:" .$res['id']. "' hidden>" .$res['answer']. "</span>";
                 echo "<span id='airdate:" .$res['id']. "' hidden>" .$res['airdate']. "</span>";
 
-                // check if already exists in favorites
-                $resid = $res['id'];
-                $check_fav = pg_query($conn, "SELECT * FROM public.rel_favorite_qs WHERE user_id = '$user_id' AND q_id='$resid'");
-                if (pg_num_rows($check_fav) == 0) {
+                if ($exists != 0) {
                     echo "<span id='changeFav:" .$res['id']. "' hidden>add</span>";
                 }
                 else {
