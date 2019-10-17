@@ -186,6 +186,7 @@ if($_SESSION['valid'] == 1) { ?>
                                         "<p>The correct question is: </p>" +
                                         "<p>" + question + ".</p>";
                                     document.getElementsByClassName("close")[0].style.display = "block";
+                                    document.getElementsByClassName("close")[0].setAttribute("onclick", "wrongAns(" + td_id + ")");
                                     document.getElementsByClassName("modal-footer")[0].style.display = "none";
                                     document.getElementById("user-answer").style.display = "none";
                                 }
