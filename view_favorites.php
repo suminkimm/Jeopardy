@@ -189,15 +189,15 @@ if($_SESSION['valid'] == 1) { ?>
                         }
 
                         if ($sort_by == null || $sort_by == 1) {
-                            $sql .= " SORT BY q.question ASC";
+                            $sql .= " ORDER BY q.question ASC";
                         }
 
                         elseif ($sort_by == 2) {
-                            $sql .= " SORT BY q.question DESC";
+                            $sql .= " ORDER BY q.question DESC";
                         }
 
                         else {
-                            $sql .= " SORT BY q.difficulty ASC";
+                            $sql .= " ORDER BY q.difficulty ASC";
                         }
                     }
                     else {
