@@ -170,7 +170,7 @@ if($_SESSION['valid'] == 1) { ?>
                                     "<button type='button' id='correct-button' onclick='correctAns(" + value + "," + td_id + ")'>I'm correct!</button>" +
                                     "<button type='button' id='wrong-button' onclick='wrongAns(" + td_id + ")'>I'm wrong...</button>";
 
-                                document.getElementsByClassName("close")[0].style.display="block";
+                                // document.getElementsByClassName("close")[0].style.display="block";
                                 document.getElementsByClassName("modal-footer")[0].style.display="none";
                                 document.getElementById("user-answer").style.display="none";
 
