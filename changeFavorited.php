@@ -29,7 +29,9 @@ else {
             WHERE NOT EXISTS (
             SELECT 1 FROM public.questions 
             WHERE q_id = $q_id)";
+    echo $sql;
     $insert_question = pg_query($conn, $sql);
+    echo pg_last_error($conn);
 
 
     $sql = "INSERT INTO public.rel_favorite_qs (user_id, question_id) VALUES ('$user_id', '$q_id')";
