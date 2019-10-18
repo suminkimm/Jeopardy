@@ -124,7 +124,7 @@ if($_SESSION['valid'] == 1) { ?>
 
     <script type="text/javascript">
         // keep track of which questions you randomly pulled
-        let questions_arr = new Array()
+        let questions_arr = new Array();
 
         // track whether submit button was clicked
         let clicked = false;
@@ -144,6 +144,7 @@ if($_SESSION['valid'] == 1) { ?>
                         if (question == null) {
                             question = "N/A";
                         }
+                        console.log(answer);
                         let answer = data[i].answer;
                         let id = data[i].id;
                         questions_arr.push(id);
