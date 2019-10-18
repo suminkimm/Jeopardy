@@ -298,6 +298,8 @@ else {
         if (question == '') {
             question = "N/A";
         }
+        question = question.replace(/"/g, "&quot;");
+
         let answer = document.getElementById('answer:' + res_id).innerText;
         if (answer == '') {
             answer = "N/A";
