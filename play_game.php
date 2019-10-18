@@ -144,6 +144,8 @@ if($_SESSION['valid'] == 1) { ?>
                         if (question == null) {
                             question = "N/A";
                         }
+                        question.replace(/"/g, "&quot;");
+
                         console.log(question);
                         let answer = data[i].answer;
                         let id = data[i].id;
@@ -155,7 +157,7 @@ if($_SESSION['valid'] == 1) { ?>
                             '<form id="submit-ans">' +
                             '<div id="countdown"></div>' +
                             '<input type="text" id="user-answer" name="user-answer" placeholder="Q: What is the question?">' +
-                            '<input type="text" id="question" value="&quot;' + question + '" hidden>' +
+                            '<input type="text" id="question" value="' + question + '" hidden>' +
                             '</form>';
 
                         // begin countdown
