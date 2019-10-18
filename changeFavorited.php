@@ -24,7 +24,7 @@ if ($category == null) {
 }
 $difficulty = $_GET['d'];
 if ($difficulty == null) {
-    $difficulty = null;
+    $difficulty = 0;
 }
 $q_id = $_GET['qid'];
 
