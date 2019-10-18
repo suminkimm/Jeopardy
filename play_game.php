@@ -144,7 +144,7 @@ if($_SESSION['valid'] == 1) { ?>
                         if (question == null) {
                             question = "N/A";
                         }
-                        console.log(answer);
+                        console.log(question);
                         let answer = data[i].answer;
                         let id = data[i].id;
                         questions_arr.push(id);
