@@ -7,10 +7,25 @@ $user_id = $_SESSION['user_id'];
 //$question = trim($_GET['q'], '"');
 $question = $_GET['q'];
 $question = pg_escape_literal($question);
+if ($question == null) {
+    $question = "N/A";
+}
 $ans = pg_escape_literal($_GET['a']);
+if ($ans == null) {
+    $ans = "N/A";
+}
 $airdate = pg_escape_literal($_GET['air']);
+if ($airdate == null) {
+    $airdate = "N/A";
+}
 $category = pg_escape_literal($_GET['cat']);
+if ($category == null) {
+    $category = "N/A";
+}
 $difficulty = $_GET['d'];
+if ($difficulty == null) {
+    $difficulty = null;
+}
 $q_id = $_GET['qid'];
 
 // check if delete
