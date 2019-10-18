@@ -155,7 +155,7 @@ if($_SESSION['valid'] == 1) { ?>
                             '<form id="submit-ans">' +
                             '<div id="countdown"></div>' +
                             '<input type="text" id="user-answer" name="user-answer" placeholder="Q: What is the question?">' +
-                            '<input type="text" id="question" value="' + question + '" hidden>' +
+                            '<input type="text" id="question" value="&quot;' + question + '" hidden>' +
                             '</form>';
 
                         // begin countdown
