@@ -144,7 +144,7 @@ if($_SESSION['valid'] == 1) { ?>
                         if (question == null) {
                             question = "N/A";
                         }
-                        question.replace(/"/g, "&quot;");
+                        question = question.replace(/"/g, "&quot;");
 
                         console.log(question);
                         let answer = data[i].answer;
