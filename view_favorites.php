@@ -234,7 +234,7 @@ if($_SESSION['valid'] == 1) { ?>
                     }
                     else {
                         echo "<tr>";
-                        echo "<td> You currently have no favorites </td>";
+                        echo "<td> No favorites results found </td>";
                         echo "</tr>";
                     }
                     ?>
@@ -372,6 +372,5 @@ else {
             }
         }
         xmlhttp.send();
-
     }
 </script>

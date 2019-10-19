@@ -367,51 +367,59 @@ if($_SESSION['valid'] == 1) { ?>
             });
         }
 
-        foreach($results as $res) {
-            if ($res['question'] != "") {
+        if($results != null) {
+            foreach($results as $res) {
+                if ($res['question'] != "") {
 
-                // check if the question already exists in favorites
-                $exists = 0;
-                $resid = $res['id'];
-                $check_fav = pg_query($conn, "SELECT * FROM public.rel_favorite_qs WHERE user_id = '$user_id' AND question_id='$resid'");
-                if (pg_num_rows($check_fav)!=0) {
-                    $exists = 1;
+                    // check if the question already exists in favorites
+                    $exists = 0;
+                    $resid = $res['id'];
+                    $check_fav = pg_query($conn, "SELECT * FROM public.rel_favorite_qs WHERE user_id = '$user_id' AND question_id='$resid'");
+                    if (pg_num_rows($check_fav)!=0) {
+                        $exists = 1;
+                    }
+
+                    // build search results table of jeopardy questions
+                    echo "<tr>";
+                    echo "<td>";
+                    echo "Q:";
+                    echo "</td>";
+                    echo "<td>";
+                    echo $res['question'];
+                    echo "</td>";
+                    echo "<td>";
+                    echo "<button type='button' onclick='getMoreInfo(".$res['id'].")' name='moreInfo'><i class=\"fas fa-info-circle\"></i></button>";
+
+                    if ($exists == 1) { // star is gold if favorited
+                        echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")' style='color:gold'><i class='fas fa-star add-to-fav'></i></button></td>";
+                    }
+                    else {
+                        echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")' style='color:black'><i class='fas fa-star add-to-fav'></i></button></td>";
+                    }
+
+                    echo "</tr>";
+                    echo "<span id='difficulty:" .$res['id']. "' hidden>" .$res['value']. "</span>";
+                    echo "<span id='category:" .$res['id']. "' hidden>" .$res['category']['title']. "</span>";
+                    echo "<span id='question:" .$res['id']. "' hidden>" .$res['question']. "</span>";
+                    echo "<span id='answer:" .$res['id']. "' hidden>" .$res['answer']. "</span>";
+                    echo "<span id='airdate:" .$res['id']. "' hidden>" .$res['airdate']. "</span>";
+
+                    if ($exists != 0) {
+                        echo "<span id='changeFav:" .$res['id']. "' hidden>delete</span>";
+                    }
+                    else {
+                        echo "<span id='changeFav:" .$res['id']. "' hidden>add</span>";
+                    }
+
                 }
-
-                // build search results table of jeopardy questions
-                echo "<tr>";
-                echo "<td>";
-                echo "Q:";
-                echo "</td>";
-                echo "<td>";
-                echo $res['question'];
-                echo "</td>";
-                echo "<td>";
-                echo "<button type='button' onclick='getMoreInfo(".$res['id'].")' name='moreInfo'><i class=\"fas fa-info-circle\"></i></button>";
-
-                if ($exists == 1) { // star is gold if favorited
-                    echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")' style='color:gold'><i class='fas fa-star add-to-fav'></i></button></td>";
-                }
-                else {
-                    echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")' style='color:black'><i class='fas fa-star add-to-fav'></i></button></td>";
-                }
-
-                echo "</tr>";
-                echo "<span id='difficulty:" .$res['id']. "' hidden>" .$res['value']. "</span>";
-                echo "<span id='category:" .$res['id']. "' hidden>" .$res['category']['title']. "</span>";
-                echo "<span id='question:" .$res['id']. "' hidden>" .$res['question']. "</span>";
-                echo "<span id='answer:" .$res['id']. "' hidden>" .$res['answer']. "</span>";
-                echo "<span id='airdate:" .$res['id']. "' hidden>" .$res['airdate']. "</span>";
-
-                if ($exists != 0) {
-                    echo "<span id='changeFav:" .$res['id']. "' hidden>delete</span>";
-                }
-                else {
-                    echo "<span id='changeFav:" .$res['id']. "' hidden>add</span>";
-                }
-
             }
         }
+        else {
+            echo "<tr>";
+            echo "<td> No search results found </td>";
+            echo "</tr>";
+        }
+        echo "</table>";
     }
 }
 else {
