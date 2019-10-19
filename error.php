@@ -20,9 +20,9 @@
     </nav>
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 col-xs-12">
+            <div class="col-lg-12 col-xs-12" style="margin-top: auto; margin-bottom: auto;">
                 <h1>OOPS! There's been a log-in issue.</h1>
-                <h2>Please click <a href="index.php">HERE to sign in again.</a></h2>
+                <h2 style="text-align: center;">Please click <a href="index.php">HERE</a> to sign in again.</h2>
             </div>
         </div>
     </div>
