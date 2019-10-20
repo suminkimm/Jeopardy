@@ -44,8 +44,10 @@ if($_SESSION['valid'] == 1) { ?>
             </div>
             <div class="row">
                 <div class="col-lg-10 offset-lg-1 col-xs-12">
+                    <!--                    creating the jeopardy board-->
+
                     <table class="table table-borderless center jeopardy-board">
-                        <!--                        get 5 random categories                        -->
+                        <!--                        get 5 random categories using API                        -->
                         <?php
                         //                        $url = "http://jservice.io/api/categories?count=5";
                         $url = "http://jservice.io/api/clues";
@@ -70,9 +72,9 @@ if($_SESSION['valid'] == 1) { ?>
                         echo "</tr>";
 
                         $value = 100;
-                        $td_id = 0; // id for each table cell
+                        $td_id = 0; // create an id for each table cell
 
-                        for($i = 0; $i < 5; $i++) {
+                        for($i = 0; $i < 5; $i++) { // populate jeopardy table with values 100-500 for category
                             $col = 0;
                             echo "<tr>";
                             foreach($categories as $cat) {
@@ -85,8 +87,6 @@ if($_SESSION['valid'] == 1) { ?>
                                     $col++;
                                     $td_id++;
                                 }
-
-    //                                    echo "<span id='cat_id' hidden>".$value."</span>";
                             }
                             $value += 100;
                             echo "</tr>";
@@ -101,6 +101,8 @@ if($_SESSION['valid'] == 1) { ?>
                 </div>
             </div>
         </div>
+
+<!--        modal containing a categorical question that pops up once jeopardy board box is clicked-->
         <div class="modal" id="myModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -114,7 +116,6 @@ if($_SESSION['valid'] == 1) { ?>
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="submit-answer" class="btn btn-primary" onclick="checkAnswer()">Submit</button>
-                        <!--                        <button type="button" onclick="closeModal()" class="btn btn-secondary">Close</button>-->
                     </div>
                 </div>
             </div>
@@ -123,35 +124,37 @@ if($_SESSION['valid'] == 1) { ?>
     </html>
 
     <script type="text/javascript">
-        // keep track of which questions you randomly pulled
+        // keep track of which questions you already randomly pulled
         let questions_arr = new Array();
-
-        // track whether submit button was clicked
+        // track whether the submit answer button was clicked
         let clicked = false;
 
+        // view question after clicking jeopardy board
         function viewQuestion(cat_id, value, td_id) {
-            let request = new XMLHttpRequest()
+
+            // randomly pull a question of the selected category and difficulty using API
+            let request = new XMLHttpRequest();
             let url = 'http://jservice.io/api/clues?value=' + value + '&category=' + cat_id;
-            request.open('GET', url, true)
+            request.open('GET', url, true);
 
             request.onload = function() {
                 // begin accessing JSON data here
-                let data = JSON.parse(this.response)
+                let data = JSON.parse(this.response);
 
                 for (let i = 0; i < data.length; i++) {
-                    if (!questions_arr.includes(data[i].id)) {
+                    if (!questions_arr.includes(data[i].id)) { // this question hasn't already been pulled
                         let question = data[i].question;
                         if (question == null) {
                             question = "N/A";
                         }
-                        question = question.replace(/"/g, "&quot;");
+                        question = question.replace(/"/g, "&quot;"); // replace quotation marks (") with (&quot)
 
-                        console.log(question);
                         let answer = data[i].answer;
                         let id = data[i].id;
                         questions_arr.push(id);
 
 
+                        // fill modal with question content
                         document.getElementsByClassName('modal-title')[0].innerText = "A: " + answer;
                         document.getElementsByClassName('modal-body')[0].innerHTML =
                             '<form id="submit-ans">' +
@@ -160,51 +163,60 @@ if($_SESSION['valid'] == 1) { ?>
                             '<input type="text" id="question" value="' + question + '" hidden>' +
                             '</form>';
 
-                        // begin countdown
+                        // begin 30 second countdown for answering question
                         var timeleft = 30;
                         var downloadTimer = setInterval(function(){
-                            if (clicked == true) {
+                            if (clicked == true) { // submit answer button clicked
                                 clearInterval(downloadTimer);
 
                                 let ans = document.getElementById("user-answer").value;
                                 let question = document.getElementById("question").value;
-                                clicked = true;
 
+                                // display user's answer and the correct answer
+                                // let user choose whether their answer was close enough to the correct answer
                                 document.getElementById("countdown").innerHTML =
                                     "<p><b>Your question was: </b>" + ans + "</p>" +
                                     "<p><b>The correct question is: </b>" + question + "</p>" +
                                     "<button type='button' id='correct-button' onclick='correctAns(" + value + "," + td_id + ")'>I'm correct!</button>" +
                                     "<button type='button' id='wrong-button' onclick='wrongAns(" + td_id + ")'>I'm wrong...</button>";
 
-                                // document.getElementsByClassName("close")[0].style.display="block";
                                 document.getElementsByClassName("modal-footer")[0].style.display="none";
                                 document.getElementById("user-answer").style.display="none";
 
+                                // reset
                                 clicked = false;
                             }
-                            else {
+
+                            else { // time ran out
                                 document.getElementById("countdown").innerHTML = "<b>" + timeleft + " seconds remaining</b>";
                                 timeleft -= 1;
                                 if (timeleft <= 0) {
                                     clearInterval(downloadTimer);
+                                    // modal shows the correct answer
                                     document.getElementById("countdown").innerHTML =
                                         "<p><b>Time's Up!</b></p>" +
                                         "<p>The correct question is: </p>" +
                                         "<p>" + question + ".</p>";
+
+                                    // time's up, so allow user to exit out of the question
+                                    // once user exits question, mark question as wrong
                                     document.getElementsByClassName("close")[0].style.display = "block";
                                     document.getElementsByClassName("close")[0].setAttribute("onclick", "wrongAns(" + td_id + ")");
+
                                     document.getElementsByClassName("modal-footer")[0].style.display = "none";
                                     document.getElementById("user-answer").style.display = "none";
                                 }
                             }
                         }, 1000);
+
+                        // allow user to see the modal
                         document.getElementById('myModal').style.display="inline";
                         break;
                     }
                 }
             }
 
-            request.send()
+            request.send();
 
         }
 
@@ -214,15 +226,18 @@ if($_SESSION['valid'] == 1) { ?>
             document.getElementsByClassName("modal-footer")[0].style.display="flex";
         }
 
-        function checkAnswer() {
+        function checkAnswer() { // determine whether user submitted answer before they ran out of time
             clicked = true;
         }
 
-        function correctAns(value, td_id) {
+        function correctAns(value, td_id) { // user answer was correct
+
+            // add question value to total score
             let score = parseInt(document.getElementById('trackScore').innerText, 10);
             score += value;
             document.getElementById('trackScore').innerText = score;
 
+            // mark question cell as correct
             let viewed_cell = document.getElementById("td:" + td_id);
             viewed_cell.style.backgroundColor = "aquamarine";
 
@@ -234,6 +249,8 @@ if($_SESSION['valid'] == 1) { ?>
         }
 
         function wrongAns(td_id) {
+
+            // mark question cell as incorrect
             let viewed_cell = document.getElementById("td:" + td_id);
             viewed_cell.style.backgroundColor = "pink";
 
@@ -247,7 +264,7 @@ if($_SESSION['valid'] == 1) { ?>
 <?php
 }
 else {
-
+    include("error.php");
 }
 
 ?>

@@ -4,7 +4,8 @@ session_start();
 require('config_db.php');
 
 $user_id = $_SESSION['user_id'];
-//$question = trim($_GET['q'], '"');
+
+// get info about question from the GET request
 $question = $_GET['q'];
 $question = pg_escape_literal($question);
 if ($question == null) {
@@ -28,17 +29,16 @@ if ($difficulty == null) {
 }
 $q_id = $_GET['qid'];
 
-// check if delete
+// check if the request was to delete or add a question to the favorites collection by checking if the question has already been favorited
 $sql = "SELECT * FROM public.rel_favorite_qs WHERE user_id='$user_id' AND question_id='$q_id'";
 $result = pg_query($conn, $sql);
 
-if (pg_num_rows($result) != 0) { // already exists, delete
+if (pg_num_rows($result) != 0) { // question already exists in favorites, delete
     $delete =pg_query($conn, "DELETE FROM public.rel_favorite_qs WHERE user_id='$user_id' AND question_id='$q_id'");
 }
 
 else {
-    // add into questions table if it doesn't already exist
-
+    // add the question into the main questions table if it doesn't already exist
     $sql = " INSERT INTO public.questions (question, answer, airdate, category, difficulty, q_id) 
         SELECT $question, $ans, $airdate, $category, $difficulty, $q_id
             WHERE NOT EXISTS (
@@ -48,7 +48,7 @@ else {
     $insert_question = pg_query($conn, $sql);
     echo pg_last_error($conn);
 
-
+    // add the question into the user's favorites collection
     $sql = "INSERT INTO public.rel_favorite_qs (user_id, question_id) VALUES ('$user_id', '$q_id')";
     $insert_rel_table = pg_query($conn, $sql);
 

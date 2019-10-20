@@ -44,12 +44,14 @@ if($_SESSION['valid'] == 1) { ?>
         <h1>Search Jeopardy!</h1>
         <form method="post" action="#">
             <div class="row" style="text-align: center;">
+                <!--                search bar-->
                 <div class="col-lg-12 col-xs-12 search-bar">
                     <input type="text" name="search-answer" placeholder="Search by answer keywords">
                     <button type="submit" name="submit"><i class="fa fa-search"></i></button>
                     <button type="button" id="show-hide" onclick="showDiv()"><i class="fas fa-plus-circle"></i></button>
                 </div>
             </div>
+            <!--                advanced search bar that is revealed onclick-->
             <div class="advanced-search" style="display: none;">
                 <div class="row" style="text-align: center;">
                     <div class="col-lg-12 col-xs-12">
@@ -80,6 +82,7 @@ if($_SESSION['valid'] == 1) { ?>
                                     <select name="categories">
                                         <option value="">Select Category</option>
                                         <?php
+                                        // fetch list of categories from API
                                         $url = "http://jservice.io/api/clues";
                                         $json = file_get_contents($url);
                                         $categories = json_decode($json, true);
@@ -131,6 +134,7 @@ if($_SESSION['valid'] == 1) { ?>
             </div>
         </form>
     </div>
+    <!--                modal that pops up to display more info about a specific question -->
     <div class="modal" id="myModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -153,7 +157,7 @@ if($_SESSION['valid'] == 1) { ?>
     </html>
 
     <script type="text/javascript">
-        function showDiv() {
+        function showDiv() { // shows or hides the advanced search bar on click
             let x = document.getElementsByClassName('advanced-search')[0];
             let button = document.getElementById('show-hide');
             if (x.style.display == "none") {
@@ -169,6 +173,8 @@ if($_SESSION['valid'] == 1) { ?>
         }
 
         function getMoreInfo(res_id) {
+
+            // get detailed info about question
             let difficulty = document.getElementById('difficulty:' + res_id).innerText;
             if (difficulty == '') {
                 difficulty = "N/A";
@@ -195,6 +201,7 @@ if($_SESSION['valid'] == 1) { ?>
                 airdate = (airdate.getMonth() + 1) + "/" + (airdate.getDate()) + "/" + airdate.getFullYear();
             }
 
+            // populate modal content with question information
             document.getElementsByClassName('modal-title')[0].innerText = "Q: " + question;
             document.getElementsByClassName('modal-body')[0].innerHTML =
                 '<p> Difficulty: ' + difficulty + '<p>' +
@@ -202,19 +209,19 @@ if($_SESSION['valid'] == 1) { ?>
                 '<p> Answer: ' + answer + '<p>' +
                 '<p> Air date: ' + airdate + '<p>';
 
-            // check if add or remove favorites
+            // check if the modal button should say add to favorites or remove from favorites
             xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function() {
                 if(this.readyState == 4 && this.status == 200) {
                     console.log("response" + this.response);
-                    document.getElementById('add-to-fav').innerText=this.response;
+                    document.getElementById('add-to-fav').innerText=this.response; // change the innertext of modal button to either add/remove from favorites
                 }
             }
             xmlhttp.open("GET","checkIfFavorited.php?q="+res_id,true);
             xmlhttp.send();
 
-            document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
-            document.getElementById('myModal').style.display="inline";
+            document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")"); // on button click, user can add/remove question from favorites
+            document.getElementById('myModal').style.display="inline"; // display the modal
 
         }
 
@@ -225,7 +232,6 @@ if($_SESSION['valid'] == 1) { ?>
 
 
         function changeFavorites(res_id) {
-            console.log("addToFav");
             let star = document.getElementById("star:" + res_id);
             let addToFavButton = document.getElementById("add-to-fav");
 
@@ -246,6 +252,7 @@ if($_SESSION['valid'] == 1) { ?>
             let answer = document.getElementById("answer:" + res_id).innerText;
             let airdate = document.getElementById("airdate:" + res_id).innerText;
 
+            // add or remove question from the favorites table in database
             xmlhttp = new XMLHttpRequest();
             xmlhttp.open("GET","changeFavorited.php?q="+question+"&a="+answer+"&air="+airdate+"&cat="+category+"&d="+difficulty+"&qid="+res_id,true);
 
@@ -262,8 +269,10 @@ if($_SESSION['valid'] == 1) { ?>
 
     <?php
 
-    if (isset($_POST['submit'])) {
+    if (isset($_POST['submit'])) { // the search function was used
         $user_id = $_SESSION['user_id'];
+
+        // get all inputted search criteria
         $search_ans = $_POST['search-answer'];
         $sort_by = $_POST['sortBy'];
 
@@ -278,15 +287,15 @@ if($_SESSION['valid'] == 1) { ?>
         $category = $_POST['categories'];
         $difficulty = $_POST['difficulty'];
 
-
+        // fetch questions using the Jeopardy API
         $url = "http://jservice.io/api/clues";
         $json = file_get_contents($url);
         $results = json_decode($json, true);
 
-        if($search_ans != null) {
+        if($search_ans != null) { // keywords
             $temp_results = array();
 
-            foreach($results as $res) {
+            foreach($results as $res) { // search through the questions and add to result array if inputted keyword matches
 
                 if (strpos($res['answer'], $search_ans) !== false) {
                     array_push($temp_results, $res);
@@ -296,30 +305,29 @@ if($_SESSION['valid'] == 1) { ?>
             $results = $temp_results;
         }
 
-        if ($from_date != null || $to_date != null) { // both dates
+        if ($from_date != null || $to_date != null) { // airing dates
 
             $temp_results = array();
 
-            if ($from_date != null && $to_date !== null) {
+            if ($from_date != null && $to_date !== null) { // both ranges given
 
                 foreach ($results as $res) {
-                    if ($res['airdate'] >= $from_date && $res['airdate'] <= $to_date) {
+                    if ($res['airdate'] >= $from_date && $res['airdate'] <= $to_date) { // add to result array if question is in range
                         array_push($temp_results, $res);
                     }
                 }
             }
-            elseif ($from_date == null) {
+            elseif ($from_date == null) { // only to date given
 
                 foreach ($results as $res) {
-                    if ($res['airdate'] <= $to_date) {
+                    if ($res['airdate'] <= $to_date) { // add to result array if question aired before this date
                         array_push($temp_results, $res);
                     }
                 }
             }
-            else {
+            else { // only from date given
                 foreach ($results as $res) {
-
-                    if ($res['airdate'] >= $from_date) {
+                    if ($res['airdate'] >= $from_date) { // add to result array if question aired after this date
                         array_push($temp_results, $res);
                     }
                 }
@@ -327,10 +335,10 @@ if($_SESSION['valid'] == 1) { ?>
             $results = $temp_results;
         }
 
-        if($category != null) {
+        if($category != null) { // categories
             $temp_results = array();
             foreach($results as $res) {
-                if ($res['category']['id'] == $category) {
+                if ($res['category']['id'] == $category) { // add to result array if question falls under this category
                     array_push($temp_results, $res);
                 }
             }
@@ -338,11 +346,11 @@ if($_SESSION['valid'] == 1) { ?>
 
         }
 
-        if($difficulty != null) { // field not filled
+        if($difficulty != null) { // difficulty, or value of question
 
             $temp_results = array();
             foreach($results as $res) {
-                if ($res['value'] == $difficulty) {
+                if ($res['value'] == $difficulty) { // add to result array if question matches value
                     array_push($temp_results, $res);
                 }
             }
@@ -351,17 +359,17 @@ if($_SESSION['valid'] == 1) { ?>
 
         echo "<table class='center questions-table'>";
 
-        if ($sort_by == null || $sort_by == 1) { // A-Z order
+        if ($sort_by == null || $sort_by == 1) { // sort A-Z order
             usort($results, function ($a, $b) {
                 return $a['question'] <=> $b['question'];
             });
         }
-        elseif ($sort_by == 2) {
+        elseif ($sort_by == 2) { // sort Z-A order
             usort($results, function ($a, $b) {
                 return $b['question'] <=> $a['question'];
             });
         }
-        else {
+        else { // sort by question value
             usort($results, function ($a, $b) {
                 return $a['value'] <=> $b['value'];
             });
@@ -393,7 +401,7 @@ if($_SESSION['valid'] == 1) { ?>
                     if ($exists == 1) { // star is gold if favorited
                         echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")' style='color:gold'><i class='fas fa-star add-to-fav'></i></button></td>";
                     }
-                    else {
+                    else { // star is black if not favorited
                         echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")' style='color:black'><i class='fas fa-star add-to-fav'></i></button></td>";
                     }
 
@@ -404,10 +412,10 @@ if($_SESSION['valid'] == 1) { ?>
                     echo "<span id='answer:" .$res['id']. "' hidden>" .$res['answer']. "</span>";
                     echo "<span id='airdate:" .$res['id']. "' hidden>" .$res['airdate']. "</span>";
 
-                    if ($exists != 0) {
+                    if ($exists != 0) { // if question is already favorited, mark question as to-be-deleted
                         echo "<span id='changeFav:" .$res['id']. "' hidden>delete</span>";
                     }
-                    else {
+                    else { // mark question as to-be-added to favorites
                         echo "<span id='changeFav:" .$res['id']. "' hidden>add</span>";
                     }
 
@@ -423,7 +431,7 @@ if($_SESSION['valid'] == 1) { ?>
     }
 }
 else {
-
+    include("error.php");
 }
 
 

@@ -16,7 +16,8 @@ session_start();
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     </head>
     <body>
-        <div class="container">
+    <!--        main page showing options to sign in or create an account-->
+    <div class="container">
             <div class="row h-100">
                 <div class="col-lg-12 col-xs-12" style="margin-top: auto; margin-bottom: auto;">
                     <h1 style="padding-bottom: 20px;">Welcome to Jeopardy!</h1>
@@ -33,6 +34,7 @@ session_start();
                 </div>
             </div>
         </div>
+        <!--        modal for creating an account-->
         <div class="modal" id="sign-up" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -77,7 +79,7 @@ session_start();
                 </div>
             </div>
         </div>
-
+<!--        modal for logging into your account-->
         <div class="modal" id="log-in" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -120,25 +122,24 @@ session_start();
 </html>
 
 <?php
-if (isset($_POST['submitLogIn'])) {
+if (isset($_POST['submitLogIn'])) { // user is logging into pre-existing account
 
     $username = $_POST['username'];
     $password = $_POST['password'];
 
     // check if user exists
     $check_sql = pg_query($conn, "SELECT * FROM public.users WHERE username = '$username'");
-    echo "error:" .pg_last_error($check_sql);
 
-    if (pg_num_rows($check_sql) != 0) { // existing
+    if (pg_num_rows($check_sql) != 0) { // existing user
 
-        while($row = pg_fetch_assoc($check_sql)) {
+        while($row = pg_fetch_assoc($check_sql)) { // fetch user info from users table
             $hashed_pwd = $row['password'];
             $user_id = $row['user_id'];
             $first_name = $row['first_name'];
             $last_name = $row['last_name'];
         }
 
-        if (password_verify($password, $hashed_pwd)) { // correct password
+        if (password_verify($password, $hashed_pwd)) { // check if the entered password matches with the correct password
 
             // set session variables
             $_SESSION['username'] = $username;
@@ -147,7 +148,7 @@ if (isset($_POST['submitLogIn'])) {
             $_SESSION['last_name'] = $last_name;
             $_SESSION['valid'] = 1;
 
-            echo "<script>window.location='main.php'</script>";
+            echo "<script>window.location='main.php'</script>"; // direct to main page
 
         }
         else {
@@ -159,21 +160,20 @@ if (isset($_POST['submitLogIn'])) {
     }
 }
 
-elseif (isset($_POST['submitSignUp'])) {
+elseif (isset($_POST['submitSignUp'])) { // user wants to create an account
 
+    // account information from user input
     $username = $_POST['username'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
 
-
+    //     check to see if existing username
     $check_sql = pg_query($conn, "SELECT * FROM public.users WHERE username = '$username'");
-
-//     check to see if existing user
-    if (pg_num_rows($check_sql) != 0) { // existing
+    if (pg_num_rows($check_sql) != 0) { // existing username
         echo "<script>alert(\"This username is already taken. Please try again.\")</script>";
     }
-    else {
+    else { // create a new user in the database
         $sql = "INSERT INTO public.users (username, password, first_name, last_name) VALUES ('$username', '$password', '$firstname', '$lastname')";
         $result = pg_query($conn, $sql);
 

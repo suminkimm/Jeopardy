@@ -45,12 +45,14 @@ if($_SESSION['valid'] == 1) { ?>
             </div>
             <form method="post" action="view_favorites.php">
                 <div class="row" style="text-align: center;">
+<!--                    search bar-->
                     <div class="col-lg-12 col-xs-12 search-bar">
                         <input type="text" name="search-answer" placeholder="Search by question keywords">
                         <button type="submit" name="submit"><i class="fa fa-search"></i></button>
                         <button type="button" id="show-hide" onclick="showDiv()"><i class="fas fa-plus-circle"></i></button>
                     </div>
                 </div>
+<!--                advanced search bar-->
                 <div class="advanced-search" style="display: none;">
                     <div class="row" style="text-align: center;">
                         <div class="col-lg-12 col-xs-12">
@@ -133,10 +135,13 @@ if($_SESSION['valid'] == 1) { ?>
             </form>
         </div>
             <div class="row">
+
+<!--                table that displays favorited questions-->
                 <table class="center">
                     <?php
                     $user_id = $_SESSION['user_id'];
-                    if (isset($_POST['submit'])) {
+
+                    if (isset($_POST['submit'])) { // user used the search or filter function
                         $searched_keyword = $_POST['search-answer'];
                         // convert to array to separate key words
                         $search_ans = explode(" ", $searched_keyword);
@@ -159,14 +164,15 @@ if($_SESSION['valid'] == 1) { ?>
                         INNER JOIN public.questions q
                         ON rfq.question_id=q.q_id
                         WHERE user_id='$user_id'";
+                        // modify the sql query depending on which search or filter functions were selected
 
-                        if ($searched_keyword != '') { // empty string
+                        if ($searched_keyword != '') { // not an empty string
                             foreach($search_ans as $keyword) {
                                 $sql .= " AND q.question LIKE '%".$keyword."%'";
                             }
                         }
 
-                        if ($from_date != null || $to_date != null) { // both dates
+                        if ($from_date != null || $to_date != null) { // both dates are searched for
 
                             if ($from_date != null && $to_date !== null) {
                                 $sql .= " AND q.airdate >= '$from_date' AND q.airdate <= '$to_date'";
@@ -199,7 +205,7 @@ if($_SESSION['valid'] == 1) { ?>
                             $sql .= " ORDER BY q.difficulty ASC";
                         }
                     }
-                    else {
+                    else { // user didn't use search or filter function, so display all of user's favorited questions
                         $sql = "SELECT * 
                         FROM public.rel_favorite_qs rfq
                         INNER JOIN public.questions q
@@ -207,10 +213,9 @@ if($_SESSION['valid'] == 1) { ?>
                         WHERE user_id='$user_id'";
                     }
 
-//                    echo "sql: ".$sql;
                     $result = pg_query($conn, $sql);
-                    if (pg_num_rows($result) != 0) {
-                        while ($row = pg_fetch_assoc($result)) { // now parse results
+                    if (pg_num_rows($result) != 0) { // questions that user searched for exist in favorites
+                        while ($row = pg_fetch_assoc($result)) { // now display results
                             echo "<tr>";
                             echo "<td>";
                             echo "Q:";
@@ -232,7 +237,7 @@ if($_SESSION['valid'] == 1) { ?>
                             echo "<span id='airdate:" .$row['q_id']. "' hidden>" .$row['airdate']. "</span>";
                         }
                     }
-                    else {
+                    else { // questions that user searched for don't exist in favorites
                         echo "<tr>";
                         echo "<td> No favorites results found </td>";
                         echo "</tr>";
@@ -242,6 +247,8 @@ if($_SESSION['valid'] == 1) { ?>
                 </table>
             </div>
         </div>
+
+        <!--                modal that pops up to display more info about a specific question -->
         <div class="modal" id="myModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -270,7 +277,7 @@ else {
 ?>
 <script type="text/javascript">
 
-    function showDiv() {
+    function showDiv() { // show or hide advanced search
         let x = document.getElementsByClassName('advanced-search')[0];
         let button = document.getElementById('show-hide');
         if (x.style.display == "none") {
@@ -286,6 +293,8 @@ else {
     }
 
     function getMoreInfo(res_id) {
+
+        // get detailed info about question
         let difficulty = document.getElementById('difficulty:' + res_id).innerText;
         if (difficulty == '') {
             difficulty = "N/A";
@@ -312,6 +321,7 @@ else {
             airdate = (airdate.getMonth() + 1) + "/" + (airdate.getDate()) + "/" + airdate.getFullYear();
         }
 
+        // populate modal content with question information
         document.getElementsByClassName('modal-title')[0].innerText = "Q: " + question;
         document.getElementsByClassName('modal-body')[0].innerHTML =
             '<p> Difficulty: ' + difficulty + '<p>' +
@@ -319,19 +329,19 @@ else {
             '<p> Answer: ' + answer + '<p>' +
             '<p> Air date: ' + airdate + '<p>';
 
-        // check if add or remove favorites
+        // check if the modal button should say add to favorites or remove from favorites
         xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if(this.readyState == 4 && this.status == 200) {
                 console.log("response" + this.response);
-                document.getElementById('add-to-fav').innerText=this.response;
+                document.getElementById('add-to-fav').innerText=this.response; // change the innertext of modal button to either add/remove from favorites
             }
         }
         xmlhttp.open("GET","checkIfFavorited.php?q="+res_id,true);
         xmlhttp.send();
 
-        document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")");
-        document.getElementById('myModal').style.display="inline";
+        document.getElementById('add-to-fav').setAttribute("onclick", "changeFavorites(" + res_id + ")"); // on button click, user can add/remove question from favorites
+        document.getElementById('myModal').style.display="inline"; // display modal
 
     }
 
@@ -341,7 +351,6 @@ else {
     }
 
     function changeFavorites(res_id) {
-        console.log("addToFav");
         let star = document.getElementById("star:" + res_id);
         let addToFavButton = document.getElementById("add-to-fav");
 
@@ -362,6 +371,7 @@ else {
         let answer = document.getElementById("answer:" + res_id).innerText;
         let airdate = document.getElementById("airdate:" + res_id).innerText;
 
+        // add or remove question from the favorites table in database
         xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET","changeFavorited.php?q="+question+"&a="+answer+"&air="+airdate+"&cat="+category+"&d="+difficulty+"&qid="+res_id,true);
 
