@@ -23,7 +23,7 @@ if($_SESSION['valid'] == 1) { ?>
         <nav class="navbar sticky-top navbar-expand-lg">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="main.php" style="font-size: 30px;">Jeopardy!</a>
+                    <a class="navbar-brand" href="categories.php" style="font-size: 30px;">Jeopardy!</a>
                 </div>
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item"><button class="menu-button" onclick="window.location= 'play_game.php'"> Play Game</button></li>

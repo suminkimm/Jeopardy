@@ -148,7 +148,7 @@ if (isset($_POST['submitLogIn'])) { // user is logging into pre-existing account
             $_SESSION['last_name'] = $last_name;
             $_SESSION['valid'] = 1;
 
-            echo "<script>window.location='main.php'</script>"; // direct to main page
+            echo "<script>window.location='categories.php'</script>"; // direct to main page
 
         }
         else {

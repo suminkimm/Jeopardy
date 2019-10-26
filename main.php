@@ -30,7 +30,7 @@ if($_SESSION['valid'] == 1) { ?>
     <nav class="navbar sticky-top navbar-expand-lg">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="main.php" style="font-size: 30px;">Jeopardy!</a>
+                <a class="navbar-brand" href="categories.php" style="font-size: 30px;">Jeopardy!</a>
             </div>
             <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item"><button class="menu-button" onclick="window.location= 'play_game.php'"> Play Game</button></li>
@@ -42,6 +42,10 @@ if($_SESSION['valid'] == 1) { ?>
 
     <div class="container">
         <h1>Search Jeopardy!</h1>
+        <?php
+        $cat_name=$_GET['cat'];
+        echo "<h5 style='color: #ff8fa5;'>Search within category: ".$cat_name."</h5>";
+        ?>
         <form method="post" action="#">
             <div class="row" style="text-align: center;">
                 <!--                search bar-->
@@ -77,33 +81,6 @@ if($_SESSION['valid'] == 1) { ?>
                     <div class="col-lg-12 col-xs-12" style="text-align: center;">
                         <table class="center">
                             <tr>
-                                <td>
-                                    Category:
-                                    <select name="categories">
-                                        <option value="">Select Category</option>
-                                        <?php
-                                        // fetch list of categories from API
-                                        $url = "http://jservice.io/api/clues";
-                                        $json = file_get_contents($url);
-                                        $categories = json_decode($json, true);
-
-                                        // sort alphabetically
-                                        usort($categories, function ($a, $b) {
-                                            return $a['category']['title'] <=> $b['category']['title'];
-                                        });
-
-                                        $unique_categories_id = array();
-
-                                        // show only unique categories
-                                        foreach ($categories as $category) {
-                                            if (!in_array($category['category']['id'], $unique_categories_id)) {
-                                                array_push($unique_categories_id, $category['category']['id']);
-                                                echo "<option value=". $category['category']['id'] .">". $category['category']['title'] ."</option>";
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                </td>
                                 <td>
                                     Difficulty:
                                     <select name="difficulty">
@@ -284,11 +261,10 @@ if($_SESSION['valid'] == 1) { ?>
             $to_date = date("Y-m-d", strtotime($_POST['to-date']));
         }
 
-        $category = $_POST['categories'];
         $difficulty = $_POST['difficulty'];
 
-        // fetch questions using the Jeopardy API
-        $url = "http://jservice.io/api/clues";
+        $category_id=$_GET['cat_id'];
+        $url = "http://jservice.io/api/clues?category=".$category_id;
         $json = file_get_contents($url);
         $results = json_decode($json, true);
 
@@ -335,16 +311,6 @@ if($_SESSION['valid'] == 1) { ?>
             $results = $temp_results;
         }
 
-        if($category != null) { // categories
-            $temp_results = array();
-            foreach($results as $res) {
-                if ($res['category']['id'] == $category) { // add to result array if question falls under this category
-                    array_push($temp_results, $res);
-                }
-            }
-            $results = $temp_results;
-
-        }
 
         if($difficulty != null) { // difficulty, or value of question
 
@@ -426,6 +392,63 @@ if($_SESSION['valid'] == 1) { ?>
             echo "<tr>";
             echo "<td> No search results found </td>";
             echo "</tr>";
+        }
+        echo "</table>";
+    }
+    else { // default view displays everything
+        $category_id=$_GET['cat_id'];
+        $url = "http://jservice.io/api/clues?category=".$category_id;
+        $json = file_get_contents($url);
+        $results = json_decode($json, true);
+
+        echo "<table class='center questions-table'>";
+
+        usort($results, function ($a, $b) {
+            return $a['question'] <=> $b['question'];
+        });
+        foreach($results as $res) {
+            if ($res['question'] != "") {
+
+                // check if the question already exists in favorites
+                $exists = 0;
+                $resid = $res['id'];
+                $check_fav = pg_query($conn, "SELECT * FROM public.rel_favorite_qs WHERE user_id = '$user_id' AND question_id='$resid'");
+                if (pg_num_rows($check_fav)!=0) {
+                    $exists = 1;
+                }
+
+                // build search results table of jeopardy questions
+                echo "<tr>";
+                echo "<td>";
+                echo "Q:";
+                echo "</td>";
+                echo "<td>";
+                echo $res['question'];
+                echo "</td>";
+                echo "<td>";
+                echo "<button type='button' onclick='getMoreInfo(".$res['id'].")' name='moreInfo'><i class=\"fas fa-info-circle\"></i></button>";
+
+                if ($exists == 1) { // star is gold if favorited
+                    echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")' style='color:gold'><i class='fas fa-star add-to-fav'></i></button></td>";
+                }
+                else { // star is black if not favorited
+                    echo "<td><button type='button' id='star:" .$res['id']. "' onclick='changeFavorites(" .$res['id']. ")' style='color:black'><i class='fas fa-star add-to-fav'></i></button></td>";
+                }
+
+                echo "</tr>";
+                echo "<span id='difficulty:" .$res['id']. "' hidden>" .$res['value']. "</span>";
+                echo "<span id='category:" .$res['id']. "' hidden>" .$res['category']['title']. "</span>";
+                echo "<span id='question:" .$res['id']. "' hidden>" .$res['question']. "</span>";
+                echo "<span id='answer:" .$res['id']. "' hidden>" .$res['answer']. "</span>";
+                echo "<span id='airdate:" .$res['id']. "' hidden>" .$res['airdate']. "</span>";
+
+                if ($exists != 0) { // if question is already favorited, mark question as to-be-deleted
+                    echo "<span id='changeFav:" .$res['id']. "' hidden>delete</span>";
+                }
+                else { // mark question as to-be-added to favorites
+                    echo "<span id='changeFav:" .$res['id']. "' hidden>add</span>";
+                }
+            }
         }
         echo "</table>";
     }
