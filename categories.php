@@ -88,19 +88,24 @@ if ($_SESSION['valid'] == 1) {
 
         $url = "http://jservice.io/search?query=" . $search_ans;
         $html = file_get_html($url);
+        $results_exist = 0;
         echo "<table class='center'>";
         foreach ($html->find('a') as $category) {
             echo "<tr>";
             echo "<td>";
             $category_id = str_replace('/popular/', '', $category->href);
-            if ($category->text() != "jService" && $category->text() != "Home") {
-                $cat = $category->text();
-                echo "<a href='main.php?cat_id=" . $category_id . "&cat=" . $cat . "'>" . $category->text() . "</a>";
+            $cat = $category->text();
+            if ($cat != "jService" && $cat != "Home") {
+                $results_exist = 1;
+                echo "<a href='main.php?cat_id=" . $category_id . "&cat=" . $cat . "'>" . $cat . "</a>";
             }
             echo "<td>";
             echo "</tr>";
         }
 
+        if ($results_exist == 0) {
+            echo "<tr><td>No Results Found</td></tr>";
+        }
         echo "</table>";
     }
 }
