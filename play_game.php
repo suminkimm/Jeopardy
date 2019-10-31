@@ -51,8 +51,15 @@ if($_SESSION['valid'] == 1) { ?>
                         // fetch categories from clues
                         $url = "http://jservice.io/api/clues";
                         $json = file_get_contents($url);
-                        $categories = json_decode($json, true);
-                        $categories = shuffle($categories); // shuffle categories every time
+                        $old_categories = json_decode($json, true);
+
+                        // shuffle categories array to get different categories every time
+                        $keys = array_keys($old_categories);
+                        shuffle($keys);
+                        $random = array();
+                        foreach($keys as $key) {
+                            $categories[$key] = $old_categories[$key];
+                        }
 
                         echo "<tr>";
                         $i = 0;
