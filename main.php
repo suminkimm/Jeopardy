@@ -401,11 +401,26 @@ if($_SESSION['valid'] == 1) { ?>
         $json = file_get_contents($url);
         $results = json_decode($json, true);
 
-        echo "<table class='center questions-table'>";
+        // remove duplicate results
+        $temp_arr = array(); // keep track of unique results
+        $i = 0;
+        $key_arr = array(); // keep track of looped values
 
-        usort($results, function ($a, $b) {
+        foreach($results as $res) {
+            if (!in_array($res['question'], $key_arr)) {
+                $key_arr[$i] = $res['question'];
+                $temp_arr[$i] = $res;
+            }
+            $i++;
+        }
+        $results = $temp_arr;
+
+        usort($results, function ($a, $b) { // sort results in abc order
             return $a['question'] <=> $b['question'];
         });
+
+        echo "<table class='center questions-table'>";
+        
         foreach($results as $res) {
             if ($res['question'] != "") {
 
