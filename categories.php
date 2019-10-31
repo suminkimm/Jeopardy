@@ -86,10 +86,13 @@ if ($_SESSION['valid'] == 1) {
 
         $difficulty = $_POST['difficulty'];
 
+        // get category search results
         $url = "http://jservice.io/search?query=" . $search_ans;
         $html = file_get_html($url);
         $results_exist = 0;
         echo "<table class='center'>";
+
+        // use web scraper to get category ids
         foreach ($html->find('a') as $category) {
             echo "<tr>";
             echo "<td>";

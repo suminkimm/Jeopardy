@@ -47,13 +47,12 @@ if($_SESSION['valid'] == 1) { ?>
                     <!--                    creating the jeopardy board-->
 
                     <table class="table table-borderless center jeopardy-board">
-                        <!--                        get 5 random categories using API                        -->
                         <?php
-                        //                        $url = "http://jservice.io/api/categories?count=5";
+                        // fetch categories from clues
                         $url = "http://jservice.io/api/clues";
                         $json = file_get_contents($url);
                         $categories = json_decode($json, true);
-
+                        $categories = shuffle($categories); // shuffle categories every time
 
                         echo "<tr>";
                         $i = 0;
@@ -64,17 +63,12 @@ if($_SESSION['valid'] == 1) { ?>
                             }
                             $i++;
                         }
-
-                        //                            foreach($categories as $cat) {
-                        //                                echo "<td>".$cat['title']."</td>";
-                        //                                echo "<span id='" .$cat['id']. "' hidden>".$cat['id']."</span>";
-                        //                            }
                         echo "</tr>";
 
                         $value = 100;
                         $td_id = 0; // create an id for each table cell
 
-                        for($i = 0; $i < 5; $i++) { // populate jeopardy table with values 100-500 for category
+                        for($i = 0; $i < 5; $i++) { // populate jeopardy table with values of difficulty 100-500 for category
                             $col = 0;
                             echo "<tr>";
                             foreach($categories as $cat) {
@@ -248,7 +242,7 @@ if($_SESSION['valid'] == 1) { ?>
             document.getElementsByClassName("modal-footer")[0].style.display="flex";
         }
 
-        function wrongAns(td_id) {
+        function wrongAns(td_id) { // user was incorrect
 
             // mark question cell as incorrect
             let viewed_cell = document.getElementById("td:" + td_id);
