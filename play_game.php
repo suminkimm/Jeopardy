@@ -53,17 +53,30 @@ if($_SESSION['valid'] == 1) { ?>
                         $json = file_get_contents($url);
                         $old_categories = json_decode($json, true);
 
+                        $temp_categories = array();
+                        $key_tracker = array();
+                        $i = 0;
+                        // make sure category doesn't repeat
+                        foreach($old_categories as $cat) {
+                            if (!in_array($cat['category']['id'], $key_tracker)) {
+                                $temp_categories[$i] = $cat;
+                                $key_tracker[$i] = $cat['category']['id'];
+                                $i++;
+                            }
+                        }
+                        $old_categories = $temp_categories;
+
                         // shuffle categories array to get different categories every time
                         $keys = array_keys($old_categories);
                         shuffle($keys);
-                        $random = array();
+                        $categories = array();
                         foreach($keys as $key) {
                             $categories[$key] = $old_categories[$key];
                         }
 
                         echo "<tr>";
                         $i = 0;
-                        foreach($categories as $cat) {
+                        foreach($categories as $cat) { // populate jeopardy table with category
                             if ($i < 5) {
                                 echo "<td>".$cat['category']['title']."</td>";
                                 echo "<span id='" .$cat['category']['id']. "' hidden>".$cat['category']['id']."</span>";

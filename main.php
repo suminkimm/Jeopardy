@@ -277,8 +277,8 @@ if($_SESSION['valid'] == 1) { ?>
             if (!in_array($res['question'], $key_arr)) {
                 $key_arr[$i] = $res['question'];
                 $temp_arr[$i] = $res;
+                $i++;
             }
-            $i++;
         }
         $results = $temp_arr;
 
@@ -424,8 +424,8 @@ if($_SESSION['valid'] == 1) { ?>
             if (!in_array($res['question'], $key_arr)) {
                 $key_arr[$i] = $res['question'];
                 $temp_arr[$i] = $res;
+                $i++;
             }
-            $i++;
         }
         $results = $temp_arr;
 
